@@ -40,9 +40,6 @@ int main(void) {
     struct input_event input;
     Key *key;
 
-    FILE *log = fopen("dfk.log", "w");
-    setbuf(log, NULL);
-
     setbuf(stdin, NULL), setbuf(stdout, NULL);
 
     while (read_event(&input)) {
@@ -59,10 +56,8 @@ int main(void) {
             continue;
         }
 
-
         key = NULL;
         for (int i = 0; i < nkeys; i++) {
-            fprintf(log, "code=%d i=%d from=%d\n", input.code, i, keys[i].from);  
             if (keys[i].from == input.code)
                 key = &keys[i];
         }
@@ -80,7 +75,6 @@ int main(void) {
                 // modify the press
                 key->doubletapped = 1;
                 input.code = key->to;
-                fprintf(log, "doubletap press\n");
             }
 
         } else if (input.value == 0) {
@@ -89,12 +83,9 @@ int main(void) {
             if (key->doubletapped) {
 
                 // modify the release
-                fprintf(log, "doubletap release\n");
                 input.code = key->to;
                 key->doubletapped = 0;
             } else if (DUR(key->pressed, input.time) < 200000) {
-
-                fprintf(log, "quick press\n");
 
                 // release the modifier first
                 fwrite(&input, sizeof(input), 1, stdout);
