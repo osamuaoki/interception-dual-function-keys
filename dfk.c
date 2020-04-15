@@ -7,23 +7,23 @@
  * https://www.kernel.org/doc/html/v4.12/input/event-codes.html
  */
 
-#define DUR(start, end) ((end.tv_sec * 1000000 + end.tv_usec) - (start.tv_sec * 1000000 + start.tv_usec))
+#define DUR(start, end) ((end.tv_sec - start.tv_sec) * 1000000 + end.tv_usec - start.tv_usec)
 
 typedef struct {
-    struct timeval pressed;
-    struct timeval released;
-    int doubletapped;
     int from;
     int to;
+    int modified;
+    struct timeval pressed;
+    struct timeval released;
 } Key;
 
 Key keys[] = {
-    { .from = KEY_LEFTSHIFT, .to = KEY_BACKSPACE, .pressed = { 0, 0, }, .released = { 0, 0, }, .doubletapped = 0, },
-    { .from = KEY_RIGHTSHIFT, .to = KEY_SPACE, .pressed = { 0, 0, }, .released = { 0, 0, }, .doubletapped = 0, },
-    { .from = KEY_LEFTCTRL, .to = KEY_TAB, .pressed = { 0, 0, }, .released = { 0, 0, }, .doubletapped = 0, },
-    { .from = KEY_RIGHTCTRL, .to = KEY_DELETE, .pressed = { 0, 0, }, .released = { 0, 0, }, .doubletapped = 0, },
-    { .from = KEY_LEFTMETA, .to = KEY_ESC, .pressed = { 0, 0, }, .released = { 0, 0, }, .doubletapped = 0, },
-    { .from = KEY_RIGHTMETA, .to = KEY_ENTER, .pressed = { 0, 0, }, .released = { 0, 0, }, .doubletapped = 0, },
+    { .from = KEY_LEFTSHIFT, .to = KEY_BACKSPACE, },
+    { .from = KEY_RIGHTSHIFT, .to = KEY_SPACE, },
+    { .from = KEY_LEFTCTRL, .to = KEY_TAB, },
+    { .from = KEY_RIGHTCTRL, .to = KEY_DELETE, },
+    { .from = KEY_LEFTMETA, .to = KEY_ESC, },
+    { .from = KEY_RIGHTMETA, .to = KEY_ENTER, },
 };
 int nkeys = 6;
 
@@ -69,25 +69,19 @@ int main(void) {
 
         if (input.value == 1) {
             key->pressed = input.time;
-
-            if (DUR(key->released, input.time) < 200000) {
-
-                // modify the press
-                key->doubletapped = 1;
+            key->modified = key->modified && DUR(key->released, input.time) < 200000;
+            if (key->modified)
                 input.code = key->to;
-            }
 
         } else if (input.value == 0) {
             key->released = input.time;
 
-            if (key->doubletapped) {
-
-                // modify the release
+            if (key->modified) {
                 input.code = key->to;
-                key->doubletapped = 0;
             } else if (DUR(key->pressed, input.time) < 200000) {
+                key->modified = 1;
 
-                // release the modifier first
+                // release first
                 fwrite(&input, sizeof(input), 1, stdout);
 
                 // synthesise a press/release
@@ -99,11 +93,11 @@ int main(void) {
                 synthetic.value = 0;
                 fwrite(&synthetic, sizeof(input), 1, stdout);
 
+                // todo: clean this up as a return early
                 continue;
             }
         }
 
-        // forward the maybe modified event
         fwrite(&input, sizeof(input), 1, stdout);
     }
 }
