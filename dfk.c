@@ -21,8 +21,7 @@ typedef struct {
 } Key;
 
 Key keys[] = {
-    //{ .from = KEY_LEFTSHIFT, .to = KEY_BACKSPACE, .label = "ls_bs" },
-    { .from = KEY_LEFTSHIFT, .to = KEY_A, .label = "ls_a" },
+    { .from = KEY_LEFTSHIFT, .to = KEY_BACKSPACE, .label = "ls_bs" },
     { .from = KEY_RIGHTSHIFT, .to = KEY_SPACE, .label = "rs_sp"},
     { .from = KEY_LEFTCTRL, .to = KEY_TAB, .label = "lc_ta"},
     { .from = KEY_RIGHTCTRL, .to = KEY_DELETE, .label = "rc_de"},
@@ -73,24 +72,27 @@ int main(void) {
         }
 
         key = NULL;
-        for (int i = 0; i < nkeys; i++) {
+        for (int i = 0; i < nkeys; i++)
             if (keys[i].from == input.code)
                 key = &keys[i];
-        }
 
-        if (!key) {
-            write_event(&input);
-
-            fprintf(stderr, "%d\n", input.code);
+        if (input.value == INPUT_VAL_PRESS) {
 
             // consume
             for (int i = 0; i < nkeys; i++) {
                 if (keys[i].state == PRESSED) {
                     keys[i].state = CONSUMED;
-                    fprintf(stderr, "%s CONSUMED", keys[i].label);
+                    fprintf(stderr, "%d CONSUMING %s ", input.code, keys[i].label);
+                    if (key == &keys[i])
+                        fprintf(stderr, "consumed itself... impossible! ");
                 }
             }
 
+            fprintf(stderr, "\n");
+        }
+
+        if (!key) {
+            write_event(&input);
             continue;
         }
 
@@ -126,13 +128,7 @@ int main(void) {
         } else if (input.value == INPUT_VAL_REPEAT) {
 
             // not sure if this is necessary
-            fprintf(stderr, "%s repeat:  ", key->label);
-            print_state(key);
-            fprintf(stderr, "\n");
-
-            if (key->state == TAPPED) {
-                input.code = key->to;
-            }
+            continue;
 
         } else if (input.value == INPUT_VAL_RELEASE) {
 
