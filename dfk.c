@@ -6,6 +6,7 @@
 #define DUR_MICRO_SEC(start, end) ((end.tv_sec - start.tv_sec) * 1000000 + end.tv_usec - start.tv_usec)
 
 #define TAP_MICRO_SEC 200000
+#define DOUBLE_TAP_MICRO_SEC 100000
 
 /* https://www.kernel.org/doc/html/latest/input/event-codes.html */
 #define INPUT_VAL_PRESS 1
@@ -104,7 +105,7 @@ int main(void) {
 
             switch (key->state) {
                 case TAPPED:
-                    if (DUR_MICRO_SEC(key->changed, input.time) < TAP_MICRO_SEC) {
+                    if (DUR_MICRO_SEC(key->changed, input.time) < DOUBLE_TAP_MICRO_SEC) {
                         key->state = TAPPED;
                         input.code = key->to;
                     } else {
