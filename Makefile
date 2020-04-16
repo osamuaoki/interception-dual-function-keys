@@ -25,12 +25,7 @@ dfk: ${OBJ}
 clean:
 	rm -f dfk ${OBJ}
 
-# from https://www.topbug.net/blog/2012/03/17/generate-ctags-files-for-c-slash-c-plus-plus-source-files-and-all-of-their-included-header-files/
-# can be properly integrated with make; the -M output is for make!
 ctags:
-	${CC} -M ${CFLAGS} ${HDR} ${SRC} | \
-		sed -e 's/[\\ ]/\n/g' | \
-		sed -e '/^$$/d' -e '/\.o:[ \t]*$$/d' | \
-		ctags -L - --kinds-C=+pl
+	generate-ctags-c ${CFLAGS} ${HDR} ${SRC}
 
 .PHONY: all options clean ctags

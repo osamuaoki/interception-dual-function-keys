@@ -7,11 +7,14 @@
  * https://www.kernel.org/doc/html/v4.12/input/event-codes.html
  */
 
-#define DUR(start, end) ((end.tv_sec - start.tv_sec) * 1000000 + end.tv_usec - start.tv_usec)
+#define DUR_MICRO_SEC(start, end) ((end.tv_sec - start.tv_sec) * 1000000 + end.tv_usec - start.tv_usec)
+
+#define TAP_MICRO_SEC 200000
 
 typedef struct {
     int from;
     int to;
+    enum { NIL, PRESSED, CONSUMED, TAPPED, } state;
     int modified;
     struct timeval pressed;
     struct timeval released;
@@ -34,6 +37,23 @@ int read_event(struct input_event *event) {
 void write_event(const struct input_event *event) {
     if (fwrite(event, sizeof(struct input_event), 1, stdout) != 1)
         exit(EXIT_FAILURE);
+}
+
+void print_state(const Key *key) {
+    switch (key->state) {
+        case TAPPED:
+            fprintf(stderr, "TAPPED");
+            break;
+        case CONSUMED:
+            fprintf(stderr, "CONSUMED");
+            break;
+        case PRESSED:
+            fprintf(stderr, "PRESSED");
+            break;
+        case NIL:
+            fprintf(stderr, "NIL");
+            break;
+    }
 }
 
 int main(void) {
@@ -69,33 +89,75 @@ int main(void) {
 
         if (input.value == 1) {
             key->pressed = input.time;
-            key->modified = key->modified && DUR(key->released, input.time) < 200000;
-            if (key->modified)
-                input.code = key->to;
+
+            fprintf(stderr, "press:   ");
+            print_state(key);
+            fprintf(stderr, " -> ");
+
+            switch (key->state) {
+                case NIL:
+                    key->state = PRESSED;
+                    break;
+                case TAPPED:
+                    if (DUR_MICRO_SEC(key->released, input.time) < TAP_MICRO_SEC) {
+                        key->state = TAPPED;
+                        input.code = key->to;
+                    } else {
+                        key->state = PRESSED;
+                    }
+                    break;
+                case CONSUMED:
+                    key->state = PRESSED;
+                default:
+                    break;
+            }
+
+            print_state(key);
+            fprintf(stderr, "\n");
 
         } else if (input.value == 0) {
             key->released = input.time;
 
-            if (key->modified) {
-                input.code = key->to;
-            } else if (DUR(key->pressed, input.time) < 200000) {
-                key->modified = 1;
+            fprintf(stderr, "release: ");
+            print_state(key);
+            fprintf(stderr, " -> ");
 
-                // release first
-                fwrite(&input, sizeof(input), 1, stdout);
+            switch (key->state) {
+                case TAPPED:
+                    input.code = key->to;
+                    break;
+                case PRESSED:
+                    if (DUR_MICRO_SEC(key->pressed, input.time) < TAP_MICRO_SEC) {
+                        key->state = TAPPED;
 
-                // synthesise a press/release
-                struct input_event synthetic;
-                synthetic.type = EV_KEY;
-                synthetic.value = 1;
-                synthetic.code = key->to;
-                fwrite(&synthetic, sizeof(input), 1, stdout);
-                synthetic.value = 0;
-                fwrite(&synthetic, sizeof(input), 1, stdout);
+                        // release first
+                        fwrite(&input, sizeof(input), 1, stdout);
 
-                // todo: clean this up as a return early
-                continue;
+                        // synthesise a press/release
+                        struct input_event synthetic;
+                        synthetic.type = EV_KEY;
+                        synthetic.value = 1;
+                        synthetic.code = key->to;
+                        fwrite(&synthetic, sizeof(input), 1, stdout);
+                        synthetic.value = 0;
+                        fwrite(&synthetic, sizeof(input), 1, stdout);
+
+                        // todo: clean this up as a return early
+                        print_state(key);
+                        fprintf(stderr, "\n");
+                        continue;
+                    } else {
+                        key->state = NIL;
+                    }
+                    break;
+                case CONSUMED:
+                case NIL:
+                default:
+                    break;
             }
+
+            print_state(key);
+            fprintf(stderr, "\n");
         }
 
         fwrite(&input, sizeof(input), 1, stdout);
