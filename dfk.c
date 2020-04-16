@@ -3,30 +3,31 @@
 #include <linux/input.h>
 #include <sys/time.h>
 
-/*
- * https://www.kernel.org/doc/html/v4.12/input/event-codes.html
- */
-
 #define DUR_MICRO_SEC(start, end) ((end.tv_sec - start.tv_sec) * 1000000 + end.tv_usec - start.tv_usec)
 
 #define TAP_MICRO_SEC 200000
 
+/* https://www.kernel.org/doc/html/latest/input/event-codes.html */
+#define INPUT_VAL_PRESS 1
+#define INPUT_VAL_RELEASE 0
+#define INPUT_VAL_REPEAT 2
+
 typedef struct {
     int from;
     int to;
-    enum { NIL, PRESSED, CONSUMED, TAPPED, } state;
-    int modified;
-    struct timeval pressed;
-    struct timeval released;
+    char *label;
+    enum { RELEASED, PRESSED, TAPPED, CONSUMED, } state;
+    struct timeval changed;
 } Key;
 
 Key keys[] = {
-    { .from = KEY_LEFTSHIFT, .to = KEY_BACKSPACE, },
-    { .from = KEY_RIGHTSHIFT, .to = KEY_SPACE, },
-    { .from = KEY_LEFTCTRL, .to = KEY_TAB, },
-    { .from = KEY_RIGHTCTRL, .to = KEY_DELETE, },
-    { .from = KEY_LEFTMETA, .to = KEY_ESC, },
-    { .from = KEY_RIGHTMETA, .to = KEY_ENTER, },
+    //{ .from = KEY_LEFTSHIFT, .to = KEY_BACKSPACE, .label = "ls_bs" },
+    { .from = KEY_LEFTSHIFT, .to = KEY_A, .label = "ls_a" },
+    { .from = KEY_RIGHTSHIFT, .to = KEY_SPACE, .label = "rs_sp"},
+    { .from = KEY_LEFTCTRL, .to = KEY_TAB, .label = "lc_ta"},
+    { .from = KEY_RIGHTCTRL, .to = KEY_DELETE, .label = "rc_de"},
+    { .from = KEY_LEFTMETA, .to = KEY_ESC, .label = "lm_es"},
+    { .from = KEY_RIGHTMETA, .to = KEY_ENTER, .label = "rm_en"},
 };
 int nkeys = 6;
 
@@ -41,17 +42,17 @@ void write_event(const struct input_event *event) {
 
 void print_state(const Key *key) {
     switch (key->state) {
+        case RELEASED:
+            fprintf(stderr, "RELEASED");
+            break;
+        case PRESSED:
+            fprintf(stderr, "PRESSED");
+            break;
         case TAPPED:
             fprintf(stderr, "TAPPED");
             break;
         case CONSUMED:
             fprintf(stderr, "CONSUMED");
-            break;
-        case PRESSED:
-            fprintf(stderr, "PRESSED");
-            break;
-        case NIL:
-            fprintf(stderr, "NIL");
             break;
     }
 }
@@ -71,11 +72,6 @@ int main(void) {
             continue;
         }
 
-        // squish all repeats; downstream seems to process key repeats just fine
-        if (input.value == 2) {
-            continue;
-        }
-
         key = NULL;
         for (int i = 0; i < nkeys; i++) {
             if (keys[i].from == input.code)
@@ -84,30 +80,40 @@ int main(void) {
 
         if (!key) {
             write_event(&input);
+
+            fprintf(stderr, "%d\n", input.code);
+
+            // consume
+            for (int i = 0; i < nkeys; i++) {
+                if (keys[i].state == PRESSED) {
+                    keys[i].state = CONSUMED;
+                    fprintf(stderr, "%s CONSUMED", keys[i].label);
+                }
+            }
+
             continue;
         }
 
-        if (input.value == 1) {
-            key->pressed = input.time;
+        if (input.value == INPUT_VAL_PRESS) {
 
-            fprintf(stderr, "press:   ");
+            fprintf(stderr, "%s press:   ", key->label);
             print_state(key);
             fprintf(stderr, " -> ");
 
             switch (key->state) {
-                case NIL:
-                    key->state = PRESSED;
-                    break;
                 case TAPPED:
-                    if (DUR_MICRO_SEC(key->released, input.time) < TAP_MICRO_SEC) {
+                    if (DUR_MICRO_SEC(key->changed, input.time) < TAP_MICRO_SEC) {
                         key->state = TAPPED;
                         input.code = key->to;
                     } else {
                         key->state = PRESSED;
                     }
                     break;
+                case RELEASED:
                 case CONSUMED:
                     key->state = PRESSED;
+                    break;
+                case PRESSED:
                 default:
                     break;
             }
@@ -115,19 +121,28 @@ int main(void) {
             print_state(key);
             fprintf(stderr, "\n");
 
-        } else if (input.value == 0) {
-            key->released = input.time;
+            key->changed = input.time;
 
-            fprintf(stderr, "release: ");
+        } else if (input.value == INPUT_VAL_REPEAT) {
+
+            // not sure if this is necessary
+            fprintf(stderr, "%s repeat:  ", key->label);
+            print_state(key);
+            fprintf(stderr, "\n");
+
+            if (key->state == TAPPED) {
+                input.code = key->to;
+            }
+
+        } else if (input.value == INPUT_VAL_RELEASE) {
+
+            fprintf(stderr, "%s release: ", key->label);
             print_state(key);
             fprintf(stderr, " -> ");
 
             switch (key->state) {
-                case TAPPED:
-                    input.code = key->to;
-                    break;
                 case PRESSED:
-                    if (DUR_MICRO_SEC(key->pressed, input.time) < TAP_MICRO_SEC) {
+                    if (DUR_MICRO_SEC(key->changed, input.time) < TAP_MICRO_SEC) {
                         key->state = TAPPED;
 
                         // release first
@@ -145,19 +160,27 @@ int main(void) {
                         // todo: clean this up as a return early
                         print_state(key);
                         fprintf(stderr, "\n");
+                        key->changed = input.time;
                         continue;
                     } else {
-                        key->state = NIL;
+                        key->state = RELEASED;
                     }
                     break;
+                case TAPPED:
+                    input.code = key->to;
+                    break;
                 case CONSUMED:
-                case NIL:
+                    key->state = RELEASED;
+                    break;
+                case RELEASED:
                 default:
                     break;
             }
 
             print_state(key);
             fprintf(stderr, "\n");
+
+            key->changed = input.time;
         }
 
         fwrite(&input, sizeof(input), 1, stdout);
