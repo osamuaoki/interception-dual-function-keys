@@ -1,3 +1,5 @@
 - JOB: "intercept -g $DEVNODE | dfk | uinput -d $DEVNODE" 
   DEVICE:
     NAME: "Metadot - Das Keyboard D4269"
+    EVENTS:
+      EV_KEY: [ KEY_LEFTSHIFT ]
