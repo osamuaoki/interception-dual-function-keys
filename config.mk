@@ -1,10 +1,13 @@
 # customize below to fit your system
 
+# paths
+PREFIX = /usr/local
+
 # includes
 INCS = -I. -I/usr/include
 
 # flags
-CFLAGS = -std=c99 -pedantic -Wall -Wextra -O3 ${INCS}
+CFLAGS = -std=c99 -pedantic -Wall -Wextra -O3 $(INCS)
 LDFLAGS =
 
 # compiler and linker
