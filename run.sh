@@ -1,4 +1,4 @@
 #!/bin/sh
 
-DEVNODE=/dev/input/by-id/usb-Kinesis_Advantage2_Keyboard_314159265359-if01-event-kbd
+DEVNODE=/dev/input/by-id/usb-Metadot_-_Das_Keyboard_D4269-event-kbd
 intercept -g $DEVNODE | ./dfk | uinput -d $DEVNODE
