@@ -13,6 +13,32 @@
 #define INPUT_VAL_RELEASE 0
 #define INPUT_VAL_REPEAT 2
 
+#ifdef DEBUG
+#define DBG(fmt) fprintf(stderr, fmt)
+#define DBGV(fmt, ...) fprintf(stderr, fmt, ## __VA_ARGS__)
+#define DBGS(key) switch (key->state) { \
+        case RELEASED: \
+            fprintf(stderr, "RELEASED    "); \
+            break; \
+        case PRESSED: \
+            fprintf(stderr, "PRESSED     "); \
+            break; \
+        case TAPPED: \
+            fprintf(stderr, "TAPPED      "); \
+            break; \
+        case DOUBLETAPPED: \
+            fprintf(stderr, "DOUBLETAPPED"); \
+            break; \
+        case CONSUMED: \
+            fprintf(stderr, "CONSUMED    "); \
+            break; \
+    }
+#else
+#define DBG(fmt)
+#define DBGV(fmt, ...)
+#define DBGS(key)
+#endif
+
 typedef struct {
     int from;
     int to;
@@ -31,26 +57,6 @@ Key keys[] = {
 };
 int nkeys = 6;
 
-void print_state(Key *key) {
-    switch (key->state) {
-        case RELEASED:
-            fprintf(stderr, "RELEASED    ");
-            break;
-        case PRESSED:
-            fprintf(stderr, "PRESSED     ");
-            break;
-        case TAPPED:
-            fprintf(stderr, "TAPPED      ");
-            break;
-        case DOUBLETAPPED:
-            fprintf(stderr, "DOUBLETAPPED");
-            break;
-        case CONSUMED:
-            fprintf(stderr, "CONSUMED    ");
-            break;
-    }
-}
-
 int read_event(struct input_event *event) {
     return fread(event, sizeof(struct input_event), 1, stdin) == 1;
 }
@@ -61,9 +67,9 @@ void write_event(const struct input_event *event) {
 }
 
 void handle_press(Key *key, struct input_event *input) {
-    fprintf(stderr, "%s press:   ", key->label);
-    print_state(key);
-    fprintf(stderr, " -> ");
+    DBGV("%s press:   ", key->label);
+    DBGS(key);
+    DBG(" -> ");
 
     // state
     switch (key->state) {
@@ -83,8 +89,8 @@ void handle_press(Key *key, struct input_event *input) {
     }
     key->changed = input->time;
 
-    print_state(key);
-    fprintf(stderr, "\n");
+    DBGS(key);
+    DBG("\n");
 
     // action
     switch (key->state) {
@@ -102,9 +108,9 @@ void handle_press(Key *key, struct input_event *input) {
 }
 
 void handle_release(Key *key, struct input_event *input) {
-    fprintf(stderr, "%s release: ", key->label);
-    print_state(key);
-    fprintf(stderr, " -> ");
+    DBGV("%s release: ", key->label);
+    DBGS(key);
+    DBG(" -> ");
 
     // state
     switch (key->state) {
@@ -125,8 +131,8 @@ void handle_release(Key *key, struct input_event *input) {
     }
     key->changed = input->time;
 
-    print_state(key);
-    fprintf(stderr, "\n");
+    DBGS(key);
+    DBG("\n");
 
     // action
     switch (key->state) {
@@ -160,7 +166,7 @@ void consume_pressed() {
         switch (keys[i].state) {
             case PRESSED:
                 keys[i].state = CONSUMED;
-                fprintf(stderr, "%s consumed\n", keys[i].label);
+                DBGV("%s consumed\n", keys[i].label);
                 break;
             case TAPPED:
             case DOUBLETAPPED:

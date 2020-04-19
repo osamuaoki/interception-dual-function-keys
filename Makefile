@@ -8,11 +8,8 @@ OBJ = $(SRC:.c=.o)
 
 all: dfk
 
-options:
-	@echo dfk build options:
-	@echo "CFLAGS   = $(CFLAGS)"
-	@echo "LDFLAGS  = $(LDFLAGS)"
-	@echo "CC       = $(CC)"
+debug: CFLAGS += $(DEBUGFLAGS)
+debug: all
 
 .c.o:
 	$(CC) -c $(CFLAGS) $<
@@ -40,4 +37,4 @@ uninstall:
 ctags:
 	generate-ctags-c $(CFLAGS) $(HDR) $(SRC)
 
-.PHONY: all options clean ctags
+.PHONY: all clean install uninstall ctags
