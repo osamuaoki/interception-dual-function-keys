@@ -5,7 +5,7 @@
 
 #define DUR_MICRO_SEC(start, end) ((end.tv_sec - start.tv_sec) * 1000000 + end.tv_usec - start.tv_usec)
 
-#define TAP_MICRO_SEC 200000
+#define TAP_MICRO_SEC 150000
 #define DOUBLE_TAP_MICRO_SEC 150000
 
 /* https://www.kernel.org/doc/html/latest/input/event-codes.html */
