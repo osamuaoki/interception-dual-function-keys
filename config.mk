@@ -8,7 +8,6 @@ INCS = -I. -I/usr/include
 
 # flags
 CFLAGS = -std=c99 -pedantic -Wall -Wextra -O3 $(INCS)
-DEBUGFLAGS = -DDEBUG -g
 LDFLAGS =
 
 # compiler and linker

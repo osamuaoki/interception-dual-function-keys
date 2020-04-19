@@ -8,9 +8,6 @@ OBJ = $(SRC:.c=.o)
 
 all: dfk
 
-debug: CFLAGS += $(DEBUGFLAGS)
-debug: all
-
 .c.o:
 	$(CC) -c $(CFLAGS) $<
 
