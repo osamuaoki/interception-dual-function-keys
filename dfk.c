@@ -6,7 +6,7 @@
 #define DUR_MICRO_SEC(start, end) ((end.tv_sec - start.tv_sec) * 1000000 + end.tv_usec - start.tv_usec)
 
 #define TAP_MICRO_SEC 200000
-#define DOUBLE_TAP_MICRO_SEC 100000
+#define DOUBLE_TAP_MICRO_SEC 150000
 
 /* https://www.kernel.org/doc/html/latest/input/event-codes.html */
 #define INPUT_VAL_PRESS 1
@@ -16,19 +16,40 @@
 typedef struct {
     int from;
     int to;
+    const char *label;
     enum { RELEASED, PRESSED, TAPPED, DOUBLETAPPED, CONSUMED, } state;
     struct timeval changed;
 } Key;
 
 Key keys[] = {
-    { .from = KEY_LEFTSHIFT, .to = KEY_BACKSPACE, },
-    { .from = KEY_RIGHTSHIFT, .to = KEY_SPACE, },
-    { .from = KEY_LEFTCTRL, .to = KEY_TAB, },
-    { .from = KEY_RIGHTCTRL, .to = KEY_DELETE, },
-    { .from = KEY_LEFTMETA, .to = KEY_ESC, },
-    { .from = KEY_RIGHTMETA, .to = KEY_ENTER, },
+    { .from = KEY_LEFTSHIFT, .to = KEY_BACKSPACE, .label = "LS", },
+    { .from = KEY_RIGHTSHIFT, .to = KEY_SPACE, .label = "RS", },
+    { .from = KEY_LEFTCTRL, .to = KEY_TAB, .label = "LC", },
+    { .from = KEY_RIGHTCTRL, .to = KEY_DELETE, .label = "RC", },
+    { .from = KEY_LEFTMETA, .to = KEY_ESC, .label = "LM", },
+    { .from = KEY_RIGHTMETA, .to = KEY_ENTER, .label = "RM", },
 };
 int nkeys = 6;
+
+void print_state(Key *key) {
+    switch (key->state) {
+        case RELEASED:
+            fprintf(stderr, "RELEASED    ");
+            break;
+        case PRESSED:
+            fprintf(stderr, "PRESSED     ");
+            break;
+        case TAPPED:
+            fprintf(stderr, "TAPPED      ");
+            break;
+        case DOUBLETAPPED:
+            fprintf(stderr, "DOUBLETAPPED");
+            break;
+        case CONSUMED:
+            fprintf(stderr, "CONSUMED    ");
+            break;
+    }
+}
 
 int read_event(struct input_event *event) {
     return fread(event, sizeof(struct input_event), 1, stdin) == 1;
@@ -40,10 +61,14 @@ void write_event(const struct input_event *event) {
 }
 
 void handle_press(Key *key, struct input_event *input) {
+    fprintf(stderr, "%s press:   ", key->label);
+    print_state(key);
+    fprintf(stderr, " -> ");
 
     // state
     switch (key->state) {
         case TAPPED:
+        case DOUBLETAPPED:
             if (DUR_MICRO_SEC(key->changed, input->time) < DOUBLE_TAP_MICRO_SEC)
                 key->state = DOUBLETAPPED;
             else
@@ -52,13 +77,16 @@ void handle_press(Key *key, struct input_event *input) {
         case RELEASED:
         case CONSUMED:
             key->state = PRESSED;
+            break;
         case PRESSED:
-        case DOUBLETAPPED:
             break;
     }
     key->changed = input->time;
 
-    // act
+    print_state(key);
+    fprintf(stderr, "\n");
+
+    // action
     switch (key->state) {
         case TAPPED:
         case DOUBLETAPPED:
@@ -70,11 +98,13 @@ void handle_press(Key *key, struct input_event *input) {
             break;
     }
 
-    // send
     write_event(input);
 }
 
 void handle_release(Key *key, struct input_event *input) {
+    fprintf(stderr, "%s release: ", key->label);
+    print_state(key);
+    fprintf(stderr, " -> ");
 
     // state
     switch (key->state) {
@@ -95,13 +125,16 @@ void handle_release(Key *key, struct input_event *input) {
     }
     key->changed = input->time;
 
-    // act
+    print_state(key);
+    fprintf(stderr, "\n");
+
+    // action
     switch (key->state) {
         case TAPPED:
-            // release from
+            // release "from"
             write_event(input);
 
-            // synthesize press/release to
+            // synthesize press/release "to"
             input->value = 1; 
             input->code = key->to;
             write_event(input);
@@ -117,6 +150,24 @@ void handle_release(Key *key, struct input_event *input) {
         case PRESSED:
             write_event(input);
             break;
+    }
+}
+
+void consume_pressed() {
+
+    // state
+    for (int i = 0; i < nkeys; i++) {
+        switch (keys[i].state) {
+            case PRESSED:
+                keys[i].state = CONSUMED;
+                fprintf(stderr, "%s consumed\n", keys[i].label);
+                break;
+            case TAPPED:
+            case DOUBLETAPPED:
+            case RELEASED:
+            case CONSUMED:
+                break;
+        }
     }
 }
 
@@ -137,15 +188,13 @@ int main(void) {
             continue;
         }
 
-        // uinput doesn't need hardware repeats
+        // uinput doesn't need hardware repeats; squish them all
         if (input.value == INPUT_VAL_REPEAT)
             continue;
 
-        // interrupt any taps that have not yet registered
+        // consume all taps that are incomplete
         if (input.value == INPUT_VAL_PRESS)
-            for (int i = 0; i < nkeys; i++)
-                if (keys[i].state == PRESSED)
-                    keys[i].state = CONSUMED;
+            consume_pressed();
 
         // is this our key?
         key = NULL;
@@ -153,7 +202,7 @@ int main(void) {
             if (keys[i].from == input.code)
                 key = &keys[i];
 
-        // forward other key events
+        // forward all other key events
         if (!key) {
             write_event(&input);
             continue;
