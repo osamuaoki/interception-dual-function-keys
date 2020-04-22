@@ -7,7 +7,8 @@ PREFIX = /usr/local
 INCS = -I. -I/usr/include
 
 # flags
-CFLAGS = -std=c99 -pedantic -Wall -Wextra -O3 $(INCS)
+# todo: revert to c++11 after removing the static struct initalisers
+CFLAGS = -std=c++2a -pedantic -Wall -Wextra -O3 $(INCS)
 LDFLAGS =
 
 # compiler and linker

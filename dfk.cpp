@@ -5,7 +5,7 @@
 
 #define DUR_MICRO_SEC(start, end) ((end.tv_sec - start.tv_sec) * 1000000 + end.tv_usec - start.tv_usec)
 
-#define TAP_MICRO_SEC 150000
+#define TAP_MICRO_SEC 200000
 #define DOUBLE_TAP_MICRO_SEC 150000
 
 /* https://www.kernel.org/doc/html/latest/input/event-codes.html */
@@ -13,20 +13,22 @@
 #define INPUT_VAL_RELEASE 0
 #define INPUT_VAL_REPEAT 2
 
+enum State { RELEASED, PRESSED, TAPPED, DOUBLETAPPED, CONSUMED, };
+
 typedef struct {
     int from;
     int to;
-    enum { RELEASED, PRESSED, TAPPED, DOUBLETAPPED, CONSUMED, } state;
+    State state;
     struct timeval changed;
 } Key;
 
 Key keys[] = {
-    { .from = KEY_LEFTSHIFT,    .to = KEY_BACKSPACE,    },
-    { .from = KEY_RIGHTSHIFT,   .to = KEY_SPACE,        },
-    { .from = KEY_LEFTCTRL,     .to = KEY_TAB,          },
-    { .from = KEY_RIGHTCTRL,    .to = KEY_DELETE,       },
-    { .from = KEY_LEFTMETA,     .to = KEY_ESC,          },
-    { .from = KEY_RIGHTMETA,    .to = KEY_ENTER,        },
+    { .from = KEY_LEFTSHIFT,    .to = KEY_BACKSPACE,    .state = RELEASED,  .changed = { 0, 0, }    ,},
+    { .from = KEY_RIGHTSHIFT,   .to = KEY_SPACE,        .state = RELEASED,  .changed = { 0, 0, }    ,}, 
+    { .from = KEY_LEFTCTRL,     .to = KEY_TAB,          .state = RELEASED,  .changed = { 0, 0, }    ,}, 
+    { .from = KEY_RIGHTCTRL,    .to = KEY_DELETE,       .state = RELEASED,  .changed = { 0, 0, }    ,}, 
+    { .from = KEY_LEFTMETA,     .to = KEY_ESC,          .state = RELEASED,  .changed = { 0, 0, }    ,}, 
+    { .from = KEY_RIGHTMETA,    .to = KEY_ENTER,        .state = RELEASED,  .changed = { 0, 0, }    ,}, 
 };
 int nkeys = 6;
 
@@ -120,6 +122,7 @@ void handle_release(Key *key, struct input_event *input) {
     }
 }
 
+// todo: pass the collection in here so that we may test
 void consume_pressed() {
 
     // state
