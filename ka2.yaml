@@ -1,5 +1,0 @@
-- JOB: "intercept -g $DEVNODE | dfk | uinput -d $DEVNODE" 
-  DEVICE:
-    NAME: "Kinesis Advantage2 Keyboard"
-    EVENTS:
-      EV_KEY: [ KEY_LEFTSHIFT ]
