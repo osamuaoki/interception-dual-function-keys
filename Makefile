@@ -1,5 +1,3 @@
-.POSIX:
-
 include config.mk
 
 HDR = config.h
@@ -9,7 +7,7 @@ OBJ = $(SRC:.cpp=.o)
 all: dfk
 
 .cpp.o:
-	$(CC) -c $(CFLAGS) $<
+	$(CC) -c $(CPPFLAGS) $(CFLAGS) $<
 
 $(OBJ): $(HDR) config.mk
 
@@ -32,6 +30,6 @@ uninstall:
 	rm -f $(PREFIX)/man/man1/dfk.1
 
 ctags:
-	generate-ctags-c $(INCS) $(HDR) $(SRC)
+	ctags-c $(CPPFLAGS) $(HDR) $(SRC)
 
 .PHONY: all clean install uninstall ctags
