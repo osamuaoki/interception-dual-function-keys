@@ -3,7 +3,8 @@
 #include <linux/input.h>
 #include <sys/time.h>
 
-#define DUR_MICRO_SEC(start, end) ((end.tv_sec - start.tv_sec) * 1000000 + end.tv_usec - start.tv_usec)
+#define DUR_MICRO_SEC(start, end) \
+    ((end.tv_sec - start.tv_sec) * 1000000 + end.tv_usec - start.tv_usec)
 
 #define TAP_MICRO_SEC 200000
 #define DOUBLE_TAP_MICRO_SEC 150000
@@ -24,11 +25,11 @@ typedef struct {
 
 Key keys[] = {
     { .from = KEY_LEFTSHIFT,    .to = KEY_BACKSPACE,    .state = RELEASED,  .changed = { 0, 0, }    ,},
-    { .from = KEY_RIGHTSHIFT,   .to = KEY_SPACE,        .state = RELEASED,  .changed = { 0, 0, }    ,}, 
-    { .from = KEY_LEFTCTRL,     .to = KEY_TAB,          .state = RELEASED,  .changed = { 0, 0, }    ,}, 
-    { .from = KEY_RIGHTCTRL,    .to = KEY_DELETE,       .state = RELEASED,  .changed = { 0, 0, }    ,}, 
-    { .from = KEY_LEFTMETA,     .to = KEY_ESC,          .state = RELEASED,  .changed = { 0, 0, }    ,}, 
-    { .from = KEY_RIGHTMETA,    .to = KEY_ENTER,        .state = RELEASED,  .changed = { 0, 0, }    ,}, 
+    { .from = KEY_RIGHTSHIFT,   .to = KEY_SPACE,        .state = RELEASED,  .changed = { 0, 0, }    ,},
+    { .from = KEY_LEFTCTRL,     .to = KEY_TAB,          .state = RELEASED,  .changed = { 0, 0, }    ,},
+    { .from = KEY_RIGHTCTRL,    .to = KEY_DELETE,       .state = RELEASED,  .changed = { 0, 0, }    ,},
+    { .from = KEY_LEFTMETA,     .to = KEY_ESC,          .state = RELEASED,  .changed = { 0, 0, }    ,},
+    { .from = KEY_RIGHTMETA,    .to = KEY_ENTER,        .state = RELEASED,  .changed = { 0, 0, }    ,},
 };
 int nkeys = 6;
 
@@ -104,7 +105,7 @@ void handle_release(Key *key, struct input_event *input) {
             write_event(input);
 
             // synthesize press/release "to"
-            input->value = 1; 
+            input->value = 1;
             input->code = key->to;
             write_event(input);
             input->value = 0;
@@ -188,4 +189,3 @@ int main(void) {
     }
 }
 
-// vim: autowrite et ts=4 sw=4
