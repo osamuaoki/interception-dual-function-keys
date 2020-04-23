@@ -1,13 +1,16 @@
 include config.mk
 
 HDR = cfg.h
-SRC = dfk.cpp cfg.cpp
-OBJ = $(SRC:.cpp=.o)
+SRC = dfk.c cfg.cpp
+OBJ = dfk.o cfg.o
 
 all: dfk
 
-.cpp.o:
+.c.o:
 	$(CC) -c $(CPPFLAGS) $(CFLAGS) $<
+
+.cpp.o:
+	$(CC) -c $(CPPFLAGS) $(CXXFLAGS) $<
 
 $(OBJ): $(HDR) config.mk
 

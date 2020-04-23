@@ -15,8 +15,8 @@
 #define INPUT_VAL_RELEASE 0
 #define INPUT_VAL_REPEAT 2
 
-Key *keys;
-int nkeys;
+static Key *keys;
+static int nkeys;
 
 int read_event(struct input_event *event) {
     return fread(event, sizeof(struct input_event), 1, stdin) == 1;

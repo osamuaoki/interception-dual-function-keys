@@ -1,17 +1,14 @@
-# customize below to fit your system
-
-# paths
 PREFIX = /usr/local
 
-# includes
 INCS = -I. -I/usr/include
 
-# flags
 CPPFLAGS = $(INCS)
-# todo: revert to c++11 after removing the static struct initalisers
-CFLAGS = -std=c++2a -pedantic -Wall -Wextra -O3
+
+COMPFLAGS = -pedantic -Wall -Wextra -O3
+CFLAGS = $(COMPFLAGS) -std=c99
+CXXFLAGS = $(COMPFLAGS) -std=c++2a # todo: revert to c++11 after removing the static struct initalisers
+
 LDFLAGS = -lstdc++ -lyaml-cpp
 
-# compiler and linker
 CC = cc
 

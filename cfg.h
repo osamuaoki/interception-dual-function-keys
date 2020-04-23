@@ -1,6 +1,10 @@
 #include <sys/time.h>
 
-enum State { RELEASED, PRESSED, TAPPED, DOUBLETAPPED, CONSUMED, };
+#ifdef __cplusplus
+extern "C" { //}
+#endif
+
+typedef enum { RELEASED, PRESSED, TAPPED, DOUBLETAPPED, CONSUMED, } State;
 
 typedef struct {
     int from;
@@ -10,3 +14,7 @@ typedef struct {
 } Key;
 
 Key *read_keys(int *nkeys);
+
+#if __cplusplus
+}
+#endif
