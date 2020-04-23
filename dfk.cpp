@@ -1,3 +1,4 @@
+#include "cfg.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <linux/input.h>
@@ -14,24 +15,8 @@
 #define INPUT_VAL_RELEASE 0
 #define INPUT_VAL_REPEAT 2
 
-enum State { RELEASED, PRESSED, TAPPED, DOUBLETAPPED, CONSUMED, };
-
-typedef struct {
-    int from;
-    int to;
-    State state;
-    struct timeval changed;
-} Key;
-
-Key keys[] = {
-    { .from = KEY_LEFTSHIFT,    .to = KEY_BACKSPACE,    .state = RELEASED,  .changed = { 0, 0, }    ,},
-    { .from = KEY_RIGHTSHIFT,   .to = KEY_SPACE,        .state = RELEASED,  .changed = { 0, 0, }    ,},
-    { .from = KEY_LEFTCTRL,     .to = KEY_TAB,          .state = RELEASED,  .changed = { 0, 0, }    ,},
-    { .from = KEY_RIGHTCTRL,    .to = KEY_DELETE,       .state = RELEASED,  .changed = { 0, 0, }    ,},
-    { .from = KEY_LEFTMETA,     .to = KEY_ESC,          .state = RELEASED,  .changed = { 0, 0, }    ,},
-    { .from = KEY_RIGHTMETA,    .to = KEY_ENTER,        .state = RELEASED,  .changed = { 0, 0, }    ,},
-};
-int nkeys = 6;
+Key *keys;
+int nkeys;
 
 int read_event(struct input_event *event) {
     return fread(event, sizeof(struct input_event), 1, stdin) == 1;
@@ -146,6 +131,8 @@ int main(void) {
     Key *key;
 
     setbuf(stdin, NULL), setbuf(stdout, NULL);
+
+    keys = read_keys(&nkeys);
 
     while (read_event(&input)) {
         // uinput doesn't need sync events

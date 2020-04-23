@@ -1,7 +1,7 @@
 include config.mk
 
-HDR = config.h
-SRC = dfk.cpp
+HDR = cfg.h
+SRC = dfk.cpp cfg.cpp
 OBJ = $(SRC:.cpp=.o)
 
 all: dfk

@@ -10,7 +10,7 @@ INCS = -I. -I/usr/include
 CPPFLAGS = $(INCS)
 # todo: revert to c++11 after removing the static struct initalisers
 CFLAGS = -std=c++2a -pedantic -Wall -Wextra -O3
-LDFLAGS =
+LDFLAGS = -lstdc++ -lyaml-cpp
 
 # compiler and linker
 CC = cc
