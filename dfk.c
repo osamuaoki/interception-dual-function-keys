@@ -134,6 +134,10 @@ int main(void) {
 
     keys = read_keys(&nkeys);
 
+    read_cfg();
+
+    return 0;
+
     while (read_event(&input)) {
         // uinput doesn't need sync events
         if (input.type == EV_MSC && input.code == MSC_SCAN)
