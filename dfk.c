@@ -154,7 +154,7 @@ loop() {
             consume_pressed();
 
         // is this our key?
-        for (m = cfg.m; m; m = m->n);
+        for (m = cfg.m; m && m->key != input.code; m = m->n);
 
         // forward all other key events
         if (!m) {
