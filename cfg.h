@@ -1,23 +1,19 @@
 #include <sys/time.h>
 #include <stddef.h>
 
+#define CFG_PATH "/etc/interception.dfk.yaml"
+//#define CFG_PATH "/home/alex/src/interception/dfk/dfk.yaml"
+
+#define DEFAULT_TAP_MILLIS 200
+#define DEFAULT_DOUBLE_TAP_MILLIS 150
+
 #ifdef __cplusplus
 extern "C" { //}
 #endif
 
-typedef enum State { RELEASED, PRESSED, TAPPED, DOUBLETAPPED, CONSUMED, } State;
+typedef enum { RELEASED, PRESSED, TAPPED, DOUBLETAPPED, CONSUMED, } State;
 
-typedef struct Key {
-    int from;
-    int to;
-    State state;
-    struct timeval changed;
-} Key;
-
-Key *read_keys(int *nkeys);
-
-
-typedef struct Mapping {
+typedef struct {
     int key;
     int tap;
     int hold;
@@ -25,16 +21,17 @@ typedef struct Mapping {
     struct timeval changed;
 } Mapping;
 
-typedef struct Cfg {
+typedef struct {
     int tap_millis;
     int double_tap_millis;
-    Mapping *mappings;
-    size_t nmappings;
+    Mapping *m;
+    size_t nm;
 } Cfg;
 
-const Cfg *read_cfg();
+void
+read_cfg(Cfg *cfg);
 
 #if __cplusplus
-}
+} // extern "C"
 #endif
 

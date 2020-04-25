@@ -4,118 +4,121 @@
 #include <linux/input.h>
 #include <sys/time.h>
 
-#define DUR_MICRO_SEC(start, end) \
-    ((end.tv_sec - start.tv_sec) * 1000000 + end.tv_usec - start.tv_usec)
-
-#define TAP_MICRO_SEC 200000
-#define DOUBLE_TAP_MICRO_SEC 150000
+#define DUR_MILLIS(start, end) \
+    ((end.tv_sec - start.tv_sec) * 1000 + (end.tv_usec - start.tv_usec) / 1000)
 
 /* https://www.kernel.org/doc/html/latest/input/event-codes.html */
 #define INPUT_VAL_PRESS 1
 #define INPUT_VAL_RELEASE 0
 #define INPUT_VAL_REPEAT 2
 
-static Key *keys;
-static int nkeys;
+static Cfg cfg;
 
-int read_event(struct input_event *event) {
+int
+read_event(struct input_event *event) {
     return fread(event, sizeof(struct input_event), 1, stdin) == 1;
 }
 
-void write_event(const struct input_event *event) {
+void
+write_event(const struct input_event *event) {
     if (fwrite(event, sizeof(struct input_event), 1, stdout) != 1)
         exit(EXIT_FAILURE);
 }
 
-void handle_press(Key *key, struct input_event *input) {
+void
+handle_press(Mapping *m, struct input_event *input) {
 
     // state
-    switch (key->state) {
+    switch (m->state) {
         case TAPPED:
         case DOUBLETAPPED:
-            if (DUR_MICRO_SEC(key->changed, input->time) < DOUBLE_TAP_MICRO_SEC)
-                key->state = DOUBLETAPPED;
+            if (DUR_MILLIS(m->changed, input->time) < cfg.double_tap_millis)
+                m->state = DOUBLETAPPED;
             else
-                key->state = PRESSED;
+                m->state = PRESSED;
             break;
         case RELEASED:
         case CONSUMED:
-            key->state = PRESSED;
+            m->state = PRESSED;
             break;
         case PRESSED:
             break;
     }
-    key->changed = input->time;
+    m->changed = input->time;
 
     // action
-    switch (key->state) {
+    switch (m->state) {
         case TAPPED:
         case DOUBLETAPPED:
-            input->code = key->to;
+            input->code = m->tap;
             break;
         case RELEASED:
         case PRESSED:
         case CONSUMED:
+            input->code = m->hold;
             break;
     }
 
     write_event(input);
 }
 
-void handle_release(Key *key, struct input_event *input) {
+void
+handle_release(Mapping *m, struct input_event *input) {
 
     // state
-    switch (key->state) {
+    switch (m->state) {
         case PRESSED:
-            if (DUR_MICRO_SEC(key->changed, input->time) < TAP_MICRO_SEC)
-                key->state = TAPPED;
+            if (DUR_MILLIS(m->changed, input->time) < cfg.tap_millis)
+                m->state = TAPPED;
             else
-                key->state = RELEASED;
+                m->state = RELEASED;
             break;
         case TAPPED:
         case DOUBLETAPPED:
             break;
         case CONSUMED:
-            key->state = RELEASED;
+            m->state = RELEASED;
             break;
         case RELEASED:
             break;
     }
-    key->changed = input->time;
+    m->changed = input->time;
 
     // action
-    switch (key->state) {
+    switch (m->state) {
         case TAPPED:
-            // release "from"
+            // release
+            input->code = m->hold;
             write_event(input);
 
-            // synthesize press/release "to"
+            // synthesize tap press/release
             input->value = 1;
-            input->code = key->to;
+            input->code = m->tap;
             write_event(input);
             input->value = 0;
             write_event(input);
             break;
         case DOUBLETAPPED:
-            input->code = key->to;
+            input->code = m->tap;
             write_event(input);
             break;
         case CONSUMED:
         case RELEASED:
         case PRESSED:
+            input->code = m->hold;
             write_event(input);
             break;
     }
 }
 
-// todo: pass the collection in here so that we may test
-void consume_pressed() {
+void
+consume_pressed() {
 
     // state
-    for (int i = 0; i < nkeys; i++) {
-        switch (keys[i].state) {
+    for (size_t i = 0; i < cfg.nm; i++) {
+        switch (cfg.m[i].state) {
             case PRESSED:
-                keys[i].state = CONSUMED;
+                cfg.m[i].state = CONSUMED;
                 break;
             case TAPPED:
             case DOUBLETAPPED:
@@ -126,17 +129,10 @@ void consume_pressed() {
     }
 }
 
-int main(void) {
+void
+loop() {
     struct input_event input;
-    Key *key;
-
-    setbuf(stdin, NULL), setbuf(stdout, NULL);
-
-    keys = read_keys(&nkeys);
-
-    read_cfg();
-
-    return 0;
+    Mapping *m;
 
     while (read_event(&input)) {
         // uinput doesn't need sync events
@@ -158,25 +154,35 @@ int main(void) {
             consume_pressed();
 
         // is this our key?
-        key = NULL;
-        for (int i = 0; i < nkeys; i++)
-            if (keys[i].from == input.code)
-                key = &keys[i];
+        m = NULL;
+        for (size_t i = 0; i < cfg.nm; i++)
+            if (cfg.m[i].key == input.code)
+                m = &cfg.m[i];
 
         // forward all other key events
-        if (!key) {
+        if (!m) {
             write_event(&input);
             continue;
         }
 
         switch (input.value) {
             case INPUT_VAL_PRESS:
-                handle_press(key, &input);
+                handle_press(m, &input);
                 break;
             case INPUT_VAL_RELEASE:
-                handle_release(key, &input);
+                handle_release(m, &input);
                 break;
         }
     }
+}
+
+int
+main(void) {
+
+    setbuf(stdin, NULL), setbuf(stdout, NULL);
+
+    read_cfg(&cfg);
+
+    loop();
 }
 
