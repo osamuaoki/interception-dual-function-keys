@@ -1,7 +1,6 @@
 #include "cfg.h"
 #include <string>
-#include <iostream>
-#include <linux/input.h>
+#include <sstream>
 #include <libevdev/libevdev.h>
 #include <yaml-cpp/yaml.h>
 
@@ -28,7 +27,12 @@ event_code(const string code) {
 
 void
 add_mapping(Cfg *cfg, const string key, const string tap, const string hold) {
-    cfg->m = (Mapping*)reallocarray(cfg->m, ++cfg->nm, sizeof(Mapping));
+
+    // todo: use a linked list; reallocarray doesn't zero memory
+    if (!cfg->m)
+        cfg->m = (Mapping*)calloc(100, sizeof(Mapping));
+
+    cfg->nm++;
 
     cfg->m[cfg->nm - 1].key = event_code(key);
     cfg->m[cfg->nm - 1].tap = event_code(tap);
@@ -75,13 +79,6 @@ read_cfg(Cfg *cfg) {
     } catch (const exception &e) {
         fprintf(stderr, "dfk: cannot parse %s: %s\n", CFG_PATH, e.what());
         exit(EXIT_FAILURE);
-    }
-
-    // todo: remove
-    for (size_t i = 0; i < cfg->nm; i++) {
-        fprintf(stderr, "key = %d\n", cfg->m[i].key);
-        fprintf(stderr, "tap = %d\n", cfg->m[i].tap);
-        fprintf(stderr, "hold = %d\n", cfg->m[i].hold);
     }
 }
 
