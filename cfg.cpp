@@ -1,6 +1,8 @@
 #include "cfg.h"
 #include <string>
+#include <iostream>
 #include <linux/input.h>
+#include <libevdev/libevdev.h>
 #include <yaml-cpp/yaml.h>
 
 static Key keyss[] = {
@@ -24,11 +26,24 @@ Key *read_keys(int *nkeys) {
     return keyss;
 }
 
+int event_code(const std::string code) {
+
+    int ret = libevdev_event_code_from_name(EV_KEY, code.c_str());
+    if (ret == -1)
+        ret = strtol(code.c_str(), NULL, 10);
+
+    // KEY_RESERVED is invalid
+    if (ret == 0)
+        throw std::invalid_argument("invalid key code: " + code);
+
+    return ret;
+}
+
 const Cfg *read_cfg() {
 
     const char *cfgfile = "dfk.yaml";
-
     YAML::Node config;
+
     try {
         config = YAML::LoadFile(cfgfile);
     } catch (YAML::Exception &e) {
@@ -45,19 +60,29 @@ const Cfg *read_cfg() {
         if (double_tap)
             cfg.double_tap_millis = double_tap.as<int>();
 
+        cfg.mappings = (Mapping*)calloc(0, sizeof(Mapping));
         const auto &keys = config["KEYS"];
         for (const auto &key : keys) {
             const auto &code = key["CODE"];
             const auto &tap = key["TAP"];
             const auto &hold = key["HOLD"];
             if (code && tap && hold) {
-                fprintf(stderr, "CODE %s\n", code.as<std::string>().c_str());
-                fprintf(stderr, "TAP %s\n", tap.as<std::string>().c_str());
-                fprintf(stderr, "HOLD %s\n", hold.as<std::string>().c_str());
+                cfg.mappings = (Mapping*)reallocarray(cfg.mappings, ++cfg.nmappings, sizeof(Mapping));
+
+                cfg.mappings[cfg.nmappings - 1].code = event_code(code.as<std::string>());
+                cfg.mappings[cfg.nmappings - 1].tap = event_code(tap.as<std::string>());
+                cfg.mappings[cfg.nmappings - 1].hold = event_code(hold.as<std::string>());
+            } else {
+                std::stringstream out;
+                out << key;
+                throw std::invalid_argument("incomplete mapping:\n" + out.str());
             }
         }
-    } catch (YAML::Exception &e) {
+    } catch (const YAML::Exception &e) {
         fprintf(stderr, "dfk: cannot parse %s: %s\n", cfgfile, e.what());
+        exit(EXIT_FAILURE);
+    } catch (const std::invalid_argument &e) {
+        fprintf(stderr, "dfk: cannot grok %s: %s\n", cfgfile, e.what());
         exit(EXIT_FAILURE);
     }
 

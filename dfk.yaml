@@ -13,5 +13,5 @@ KEYS:
 
     - CODE: KEY_X
       TAP: KEY_Y
-      HOLD: KEY_Z
+      HOLD: 1
 

@@ -1,12 +1,13 @@
 #include <sys/time.h>
+#include <stddef.h>
 
 #ifdef __cplusplus
 extern "C" { //}
 #endif
 
-typedef enum { RELEASED, PRESSED, TAPPED, DOUBLETAPPED, CONSUMED, } State;
+typedef enum State { RELEASED, PRESSED, TAPPED, DOUBLETAPPED, CONSUMED, } State;
 
-typedef struct {
+typedef struct Key {
     int from;
     int to;
     State state;
@@ -16,7 +17,7 @@ typedef struct {
 Key *read_keys(int *nkeys);
 
 
-typedef struct {
+typedef struct Mapping {
     int code;
     int tap;
     int hold;
@@ -24,11 +25,11 @@ typedef struct {
     struct timeval changed;
 } Mapping;
 
-typedef struct {
+typedef struct Cfg {
     int tap_millis;
     int double_tap_millis;
     Mapping *mappings;
-    int nmappings;
+    size_t nmappings;
 } Cfg;
 
 const Cfg *read_cfg();
