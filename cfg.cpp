@@ -27,16 +27,19 @@ event_code(const string code) {
 
 void
 add_mapping(Cfg *cfg, const string key, const string tap, const string hold) {
+    Mapping *m, *p;
 
-    // todo: use a linked list; reallocarray doesn't zero memory
+    m = (Mapping*)calloc(1, sizeof(Mapping));
     if (!cfg->m)
-        cfg->m = (Mapping*)calloc(100, sizeof(Mapping));
+        cfg->m = m;
+    else {
+        for (p = cfg->m; p->n; p = p->n);
+        p->n = m;
+    }
 
-    cfg->nm++;
-
-    cfg->m[cfg->nm - 1].key = event_code(key);
-    cfg->m[cfg->nm - 1].tap = event_code(tap);
-    cfg->m[cfg->nm - 1].hold = event_code(hold);
+    m->key = event_code(key);
+    m->tap = event_code(tap);
+    m->hold = event_code(hold);
 }
 
 } // namespace

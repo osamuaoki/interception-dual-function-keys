@@ -115,10 +115,10 @@ void
 consume_pressed() {
 
     // state
-    for (size_t i = 0; i < cfg.nm; i++) {
-        switch (cfg.m[i].state) {
+    for (Mapping *m = cfg.m; m; m = m->n) {
+        switch (m->state) {
             case PRESSED:
-                cfg.m[i].state = CONSUMED;
+                m->state = CONSUMED;
                 break;
             case TAPPED:
             case DOUBLETAPPED:
@@ -154,10 +154,7 @@ loop() {
             consume_pressed();
 
         // is this our key?
-        m = NULL;
-        for (size_t i = 0; i < cfg.nm; i++)
-            if (cfg.m[i].key == input.code)
-                m = &cfg.m[i];
+        for (m = cfg.m; m; m = m->n);
 
         // forward all other key events
         if (!m) {
