@@ -18,7 +18,7 @@ Key *read_keys(int *nkeys);
 
 
 typedef struct Mapping {
-    int code;
+    int key;
     int tap;
     int hold;
     State state;

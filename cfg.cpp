@@ -39,6 +39,14 @@ int event_code(const std::string code) {
     return ret;
 }
 
+void add_mapping(const std::string key, const std::string tap, const std::string hold) {
+    cfg.mappings = (Mapping*)reallocarray(cfg.mappings, ++cfg.nmappings, sizeof(Mapping));
+
+    cfg.mappings[cfg.nmappings - 1].key = event_code(key);
+    cfg.mappings[cfg.nmappings - 1].tap = event_code(tap);
+    cfg.mappings[cfg.nmappings - 1].hold = event_code(hold);
+}
+
 const Cfg *read_cfg() {
 
     const char *cfgfile = "dfk.yaml";
@@ -53,39 +61,34 @@ const Cfg *read_cfg() {
 
     try {
         const auto &timing = config["TIMING"];
-        const auto &tap = timing["TAP_MILLISEC"];
-        const auto &double_tap = timing["DOUBLE_TAP_MILLISEC"];
-        if (tap)
-            cfg.tap_millis = tap.as<int>();
-        if (double_tap)
-            cfg.double_tap_millis = double_tap.as<int>();
+        if (timing["TAP_MILLISEC"])
+            cfg.tap_millis = timing["TAP_MILLISEC"].as<int>();
+        if (timing["DOUBLE_TAP_MILLISEC"])
+            cfg.double_tap_millis = timing["DOUBLE_TAP_MILLISEC"].as<int>();
 
-        cfg.mappings = (Mapping*)calloc(0, sizeof(Mapping));
-        const auto &keys = config["KEYS"];
-        for (const auto &key : keys) {
-            const auto &code = key["CODE"];
-            const auto &tap = key["TAP"];
-            const auto &hold = key["HOLD"];
-            if (code && tap && hold) {
-                cfg.mappings = (Mapping*)reallocarray(cfg.mappings, ++cfg.nmappings, sizeof(Mapping));
-
-                cfg.mappings[cfg.nmappings - 1].code = event_code(code.as<std::string>());
-                cfg.mappings[cfg.nmappings - 1].tap = event_code(tap.as<std::string>());
-                cfg.mappings[cfg.nmappings - 1].hold = event_code(hold.as<std::string>());
+        const auto &mappings = config["MAPPINGS"];
+        for (const auto &mapping : mappings) {
+            if (mapping["KEY"] && mapping["TAP"] && mapping["HOLD"]) {
+                add_mapping(mapping["KEY"].as<std::string>(),
+                        mapping["TAP"].as<std::string>(),
+                        mapping["HOLD"].as<std::string>());
             } else {
                 std::stringstream out;
-                out << key;
-                throw std::invalid_argument("incomplete mapping:\n" + out.str());
+                out << mapping;
+                throw std::invalid_argument("incomplete mapping\n" + out.str());
             }
         }
-    } catch (const YAML::Exception &e) {
+    } catch (const std::exception &e) {
         fprintf(stderr, "dfk: cannot parse %s: %s\n", cfgfile, e.what());
-        exit(EXIT_FAILURE);
-    } catch (const std::invalid_argument &e) {
-        fprintf(stderr, "dfk: cannot grok %s: %s\n", cfgfile, e.what());
         exit(EXIT_FAILURE);
     }
 
-    return NULL;
+    for (size_t i = 0; i < cfg.nmappings; i++) {
+        fprintf(stderr, "key = %d\n", cfg.mappings[i].key);
+        fprintf(stderr, "tap = %d\n", cfg.mappings[i].tap);
+        fprintf(stderr, "hold = %d\n", cfg.mappings[i].hold);
+    }
+
+    return &cfg;
 }
 
