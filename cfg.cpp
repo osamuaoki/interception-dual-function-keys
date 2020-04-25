@@ -5,6 +5,13 @@
 #include <libevdev/libevdev.h>
 #include <yaml-cpp/yaml.h>
 
+namespace { // }
+
+using std::exception;
+using std::invalid_argument;
+using std::string;
+using std::stringstream;
+
 static Key keyss[] = {
     { .from = KEY_LEFTSHIFT,    .to = KEY_BACKSPACE,    .state = RELEASED,  .changed = { 0, 0, }    ,},
     { .from = KEY_RIGHTSHIFT,   .to = KEY_SPACE,        .state = RELEASED,  .changed = { 0, 0, }    ,},
@@ -21,12 +28,7 @@ static Cfg cfg = {
     .nmappings = 0,
 };
 
-Key *read_keys(int *nkeys) {
-    *nkeys = 6;
-    return keyss;
-}
-
-int event_code(const std::string code) {
+int event_code(const string code) {
 
     int ret = libevdev_event_code_from_name(EV_KEY, code.c_str());
     if (ret == -1)
@@ -34,17 +36,25 @@ int event_code(const std::string code) {
 
     // KEY_RESERVED is invalid
     if (ret == 0)
-        throw std::invalid_argument("invalid key code: " + code);
+        throw invalid_argument("invalid key code: " + code);
 
     return ret;
 }
 
-void add_mapping(const std::string key, const std::string tap, const std::string hold) {
-    cfg.mappings = (Mapping*)reallocarray(cfg.mappings, ++cfg.nmappings, sizeof(Mapping));
+void add_mapping(const string key, const string tap, const string hold) {
+    cfg.mappings =
+        (Mapping*)reallocarray(cfg.mappings, ++cfg.nmappings, sizeof(Mapping));
 
     cfg.mappings[cfg.nmappings - 1].key = event_code(key);
     cfg.mappings[cfg.nmappings - 1].tap = event_code(tap);
     cfg.mappings[cfg.nmappings - 1].hold = event_code(hold);
+}
+
+} // unnamed namespace
+
+Key *read_keys(int *nkeys) {
+    *nkeys = 6;
+    return keyss;
 }
 
 const Cfg *read_cfg() {
@@ -69,16 +79,16 @@ const Cfg *read_cfg() {
         const auto &mappings = config["MAPPINGS"];
         for (const auto &mapping : mappings) {
             if (mapping["KEY"] && mapping["TAP"] && mapping["HOLD"]) {
-                add_mapping(mapping["KEY"].as<std::string>(),
-                        mapping["TAP"].as<std::string>(),
-                        mapping["HOLD"].as<std::string>());
+                add_mapping(mapping["KEY"].as<string>(),
+                        mapping["TAP"].as<string>(),
+                        mapping["HOLD"].as<string>());
             } else {
-                std::stringstream out;
+                stringstream out;
                 out << mapping;
-                throw std::invalid_argument("incomplete mapping\n" + out.str());
+                throw invalid_argument("incomplete mapping:\n" + out.str());
             }
         }
-    } catch (const std::exception &e) {
+    } catch (const exception &e) {
         fprintf(stderr, "dfk: cannot parse %s: %s\n", cfgfile, e.what());
         exit(EXIT_FAILURE);
     }

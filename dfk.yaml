@@ -12,6 +12,6 @@ MAPPINGS:
       HOLD: KEY_RIGHTSHIFT
 
     - KEY: KEY_X
-      TA: KEY_Y
+      TAP: KEY_Y
       HOLD: 1
 
