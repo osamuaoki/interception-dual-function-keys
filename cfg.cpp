@@ -30,9 +30,9 @@ add_mapping(Cfg *cfg, const string key, const string tap, const string hold) {
     Mapping *m, *p;
 
     m = (Mapping*)calloc(1, sizeof(Mapping));
-    if (!cfg->m)
+    if (!cfg->m) {
         cfg->m = m;
-    else {
+    } else {
         for (p = cfg->m; p->n; p = p->n);
         p->n = m;
     }

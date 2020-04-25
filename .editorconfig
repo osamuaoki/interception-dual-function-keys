@@ -8,5 +8,5 @@ insert_final_newline = true
 trim_trailing_whitespace = true
 [*.{md}]
 trim_trailing_whitespace = false
-[*.{c,cpp}]
+[*.{h,c,cpp}]
 max_line_length = 80

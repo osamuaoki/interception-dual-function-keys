@@ -2,7 +2,8 @@
 #include <stddef.h>
 
 #define CFG_PATH "/etc/interception.dfk.yaml"
-//#define CFG_PATH "/home/alex/src/interception/dfk/dfk.yaml"
+//#define CFG_PATH "/home/alex/src/interception/dfk/examples/alex.yaml"
+//#define CFG_PATH "/home/alex/src/interception/dfk/examples/home.yaml"
 
 #define DEFAULT_TAP_MILLIS 200
 #define DEFAULT_DOUBLE_TAP_MILLIS 150
@@ -11,7 +12,13 @@
 extern "C" { //}
 #endif
 
-typedef enum State { RELEASED, PRESSED, TAPPED, DOUBLETAPPED, CONSUMED, } State;
+typedef enum State {
+    RELEASED,
+    PRESSED,
+    TAPPED,
+    DOUBLETAPPED,
+    CONSUMED,
+} State;
 
 typedef struct Mapping {
     int key;
