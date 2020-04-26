@@ -1,6 +1,7 @@
 #include "cfg.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include <getopt.h>
 #include <linux/input.h>
 #include <sys/time.h>
 
@@ -173,13 +174,42 @@ loop() {
     }
 }
 
-int
-main(void) {
+void
+print_usage(FILE *stream,const char *program) {
+    fprintf(stream,
+            "dfk - dual function keys plugin for interception tools:\n"
+            "        https://gitlab.com/interception/linux/tools\n"
+            "\n"
+            "usage: %s [-h] -c /path/to/dfk.config.yaml\n"
+            "\n"
+            "options:\n"
+            "    -h                              show this message and exit\n"
+            "    -c /path/to/dfk.config.yaml  use dfk.config.yaml\n",
+            program);
+}
 
+int
+main(int argc, char *argv[]) {
     setbuf(stdin, NULL), setbuf(stdout, NULL);
 
-    read_cfg(&cfg);
+    int configured = 0;
+    int opt;
+    while ((opt = getopt(argc, argv, "hc:")) != -1) {
+        switch (opt) {
+            case 'h':
+                return print_usage(stdout, argv[0]), EXIT_SUCCESS;
+            case 'c':
+                if (configured)
+                    break;
+                read_cfg(&cfg, optarg);
+                configured = 1;
+                continue;
+        }
+    }
 
-    loop();
+    if (!configured)
+        return print_usage(stderr, argv[0]), EXIT_FAILURE;
+
+    //loop();
 }
 

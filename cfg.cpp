@@ -45,13 +45,13 @@ add_mapping(Cfg *cfg, const string key, const string tap, const string hold) {
 } // namespace
 
 void
-read_cfg(Cfg *cfg) {
+read_cfg(Cfg *cfg, const char *path) {
     YAML::Node config;
 
     try {
-        config = YAML::LoadFile(CFG_PATH);
+        config = YAML::LoadFile(path);
     } catch (const exception &e) {
-        fprintf(stderr, "dfk: cannot read %s: %s\n", CFG_PATH, e.what());
+        fprintf(stderr, "dfk: cannot read '%s': %s\n", path, e.what());
         exit(EXIT_FAILURE);
     }
 
@@ -80,7 +80,7 @@ read_cfg(Cfg *cfg) {
             }
         }
     } catch (const exception &e) {
-        fprintf(stderr, "dfk: cannot parse %s: %s\n", CFG_PATH, e.what());
+        fprintf(stderr, "dfk: cannot parse '%s': %s\n", path, e.what());
         exit(EXIT_FAILURE);
     }
 }
