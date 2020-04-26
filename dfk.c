@@ -175,7 +175,7 @@ loop() {
 }
 
 void
-print_usage(FILE *stream,const char *program) {
+print_usage(FILE *stream, const char *program) {
     fprintf(stream,
             "dfk - dual function keys plugin for interception tools:\n"
             "        https://gitlab.com/interception/linux/tools\n"
@@ -183,7 +183,7 @@ print_usage(FILE *stream,const char *program) {
             "usage: %s [-h] -c /path/to/dfk.config.yaml\n"
             "\n"
             "options:\n"
-            "    -h                              show this message and exit\n"
+            "    -h                           show this message and exit\n"
             "    -c /path/to/dfk.config.yaml  use dfk.config.yaml\n",
             program);
 }
@@ -210,6 +210,6 @@ main(int argc, char *argv[]) {
     if (!configured)
         return print_usage(stderr, argv[0]), EXIT_FAILURE;
 
-    //loop();
+    loop();
 }
 
