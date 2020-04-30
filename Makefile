@@ -35,4 +35,7 @@ uninstall:
 ctags:
 	ctags-c $(CPPFLAGS) $(HDR) $(SRC)
 
+doc:
+	pandoc -f man -t gfm dfk.1 > README.md
+
 .PHONY: all clean install uninstall ctags
