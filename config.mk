@@ -11,4 +11,5 @@ CXXFLAGS = $(COMPFLAGS) -std=c++11
 LDFLAGS = -lstdc++ -lyaml-cpp -levdev
 
 CC = cc
+CXX = g++
 

@@ -1,21 +1,16 @@
 include config.mk
 
 HDR = cfg.h
-SRC = dfk.c cfg.cpp
-OBJ = dfk.o cfg.o
+CSRC = dfk.c
+CXXSRC = cfg.cpp
+
+OBJ = $(CSRC:.c=.o) $(CXXSRC:.cpp=.o)
 
 all: dfk
 
-.c.o:
-	$(CC) -c $(CPPFLAGS) $(CFLAGS) $<
-
-.cpp.o:
-	$(CC) -c $(CPPFLAGS) $(CXXFLAGS) $<
-
-$(OBJ): $(HDR) config.mk
+$(OBJ): $(HDR)
 
 dfk: $(OBJ)
-	$(CC) -o $@ $(OBJ) $(LDFLAGS)
 
 clean:
 	rm -f dfk $(OBJ)
@@ -33,9 +28,9 @@ uninstall:
 	rm -f $(PREFIX)/man/man1/dfk.1
 
 ctags:
-	ctags-c $(CPPFLAGS) $(HDR) $(SRC)
+	ctags-c $(CPPFLAGS) $(HDR) $(CSRC) $(CXXSRC)
 
-doc:
+doc: dfk.1
 	pandoc -f man -t gfm dfk.1 > README.md
 
 .PHONY: all clean install uninstall ctags
