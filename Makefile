@@ -8,7 +8,7 @@ OBJ = $(CSRC:.c=.o) $(CXXSRC:.cpp=.o)
 
 all: dfk
 
-$(OBJ): $(HDR)
+$(OBJ): config.mk $(HDR)
 
 dfk: $(OBJ)
 

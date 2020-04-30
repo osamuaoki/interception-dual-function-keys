@@ -1,6 +1,6 @@
 PREFIX = /usr/local
 
-INCS = -I. -I/usr/include -I/usr/include/libevdev-1.0
+INCS = -I/usr/include/libevdev-1.0
 
 CPPFLAGS = $(INCS)
 
