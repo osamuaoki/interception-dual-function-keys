@@ -113,6 +113,27 @@ handle_release(Mapping *m, struct input_event *input) {
 }
 
 void
+handle_repeat(Mapping *m, struct input_event *input) {
+
+    // no state change
+
+    // action
+    switch (m->state) {
+        case TAPPED:
+        case DOUBLETAPPED:
+            input->code = m->tap;
+            write_event(input);
+            break;
+        case CONSUMED:
+        case RELEASED:
+        case PRESSED:
+            input->code = m->hold;
+            write_event(input);
+            break;
+    }
+}
+
+void
 consume_pressed() {
 
     // state
@@ -146,10 +167,6 @@ loop() {
             continue;
         }
 
-        // uinput doesn't need hardware repeats; squish them all
-        if (input.value == INPUT_VAL_REPEAT)
-            continue;
-
         // consume all taps that are incomplete
         if (input.value == INPUT_VAL_PRESS)
             consume_pressed();
@@ -169,6 +186,14 @@ loop() {
                 break;
             case INPUT_VAL_RELEASE:
                 handle_release(m, &input);
+                break;
+            case INPUT_VAL_REPEAT:
+                handle_repeat(m, &input);
+                break;
+            default:
+                fprintf(stderr, "unexpected .value=%d .code=%d, doing nothing",
+                        input.value,
+                        input.code);
                 break;
         }
     }
