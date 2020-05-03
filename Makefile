@@ -31,7 +31,7 @@ ctags:
 	ctags-c $(CPPFLAGS) $(HDR) $(CSRC) $(CXXSRC)
 
 doc: dfk.md
-	pandoc -s --wrap=none -f markdown -t man dfk.md -o dfk.1
+	pandoc -s --wrap=none -f markdown -t man dfk.md -o dfk.1 --shift-heading-level-by=-1
 	pandoc -s --wrap=none -f markdown -t commonmark dfk.md -o README.md
 
 .PHONY: all clean install uninstall ctags
