@@ -1,32 +1,32 @@
-# NAME
+## NAME
 
 dfk - dual function keys
 
-# SYNOPSIS
+## SYNOPSIS
 
 dfk \[*-h*\] -c \[*yaml config path*\]
 
-# DESCRIPTION
+## DESCRIPTION
 
 Tap for one key, hold for another.
 
 A plugin for [interception tools](https://gitlab.com/interception/linux).
 
-# FUNCTIONALITY
+## FUNCTIONALITY
 
 Tap or hold is not enough to be useful.
 
-## Tap
+### Tap
 
-## Double Tap
+### Double Tap
 
-## Consumption
+### Consumption
 
-# CONFIGURATION
+## CONFIGURATION
 
 There are two parts to be configured: dfk and udevmon, which launches dfk.
 
-## dfk
+### dfk
 
 ``` yaml
 TIMING:
@@ -67,7 +67,7 @@ MAPPINGS:
       HOLD: KEY_RIGHTSHIFT
 ```
 
-## udevmon
+### udevmon
 
 ``` yaml
 - JOB: "intercept -g $DEVNODE | dfk -c /etc/dfk.home.yaml | uinput -d $DEVNODE"
@@ -93,7 +93,7 @@ MAPPINGS:
     NAME: "q.m.k HHKB mod Keyboard"
 ```
 
-# FAQ
+## FAQ
 
 *I see you are using “q.m.k HHKB mod Keyboard” in your udevmon example. It’s using [QMK Firmware](https://qmk.fm/). Why not just use [Tap-Hold](https://docs.qmk.fm/#/tap_hold)?*
 
@@ -106,5 +106,3 @@ Good catch\! That does indeed provide the same functionality as dfk. Unfortunate
 *Why not use [xcape](https://github.com/alols/xcape)?*
 
 Xcape only provides simple tap/hold functionality. It appears difficult (impossible?) to add the remaining functionality using its XTestFakeKeyEvent mechanisms.
-
-# SEE ALSO

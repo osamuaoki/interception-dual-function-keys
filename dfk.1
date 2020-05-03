@@ -2,24 +2,24 @@
 .\"
 .TH "DFK" "1" "2020/05/03" "Dual Function Keys" "User Manuals"
 .hy
-.SH NAME
+.SS NAME
 .PP
 dfk - dual function keys
-.SH SYNOPSIS
+.SS SYNOPSIS
 .PP
 dfk [\f[I]-h\f[R]] -c [\f[I]yaml config path\f[R]]
-.SH DESCRIPTION
+.SS DESCRIPTION
 .PP
 Tap for one key, hold for another.
 .PP
 A plugin for interception tools (https://gitlab.com/interception/linux).
-.SH FUNCTIONALITY
+.SS FUNCTIONALITY
 .PP
 Tap or hold is not enough to be useful.
 .SS Tap
 .SS Double Tap
 .SS Consumption
-.SH CONFIGURATION
+.SS CONFIGURATION
 .PP
 There are two parts to be configured: dfk and udevmon, which launches dfk.
 .SS dfk
@@ -91,7 +91,7 @@ MAPPINGS:
     NAME: \[dq]q.m.k HHKB mod Keyboard\[dq]
 \f[R]
 .fi
-.SH FAQ
+.SS FAQ
 .PP
 \f[I]I see you are using \[lq]q.m.k HHKB mod Keyboard\[rq] in your udevmon example. It\[cq]s using QMK Firmware (https://qmk.fm/). Why not just use Tap-Hold (https://docs.qmk.fm/#/tap_hold)?\f[R]
 .PP
@@ -109,6 +109,5 @@ My unscientific testing with an Ergodox (\[ti]800 scans/sec) and HHKB (\[ti]140)
 .PP
 Xcape only provides simple tap/hold functionality.
 It appears difficult (impossible?) to add the remaining functionality using its XTestFakeKeyEvent mechanisms.
-.SH SEE ALSO
 .SH AUTHORS
 Alexander Courtis.
