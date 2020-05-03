@@ -13,8 +13,6 @@
 #define INPUT_VAL_RELEASE 0
 #define INPUT_VAL_REPEAT 2
 
-static Cfg cfg;
-
 int
 read_event(struct input_event *event) {
     return fread(event, sizeof(struct input_event), 1, stdin) == 1;
@@ -33,7 +31,7 @@ handle_press(Mapping *m, struct input_event *input) {
     switch (m->state) {
         case TAPPED:
         case DOUBLETAPPED:
-            if (DUR_MILLIS(m->changed, input->time) < cfg.double_tap_millis)
+            if (DUR_MILLIS(m->changed, input->time) < cfg->double_tap_millis)
                 m->state = DOUBLETAPPED;
             else
                 m->state = PRESSED;
@@ -69,7 +67,7 @@ handle_release(Mapping *m, struct input_event *input) {
     // state
     switch (m->state) {
         case PRESSED:
-            if (DUR_MILLIS(m->changed, input->time) < cfg.tap_millis)
+            if (DUR_MILLIS(m->changed, input->time) < cfg->tap_millis)
                 m->state = TAPPED;
             else
                 m->state = RELEASED;
@@ -116,7 +114,7 @@ void
 consume_pressed() {
 
     // state
-    for (Mapping *m = cfg.m; m; m = m->n) {
+    for (Mapping *m = cfg->m; m; m = m->n) {
         switch (m->state) {
             case PRESSED:
                 m->state = CONSUMED;
@@ -155,7 +153,7 @@ loop() {
             consume_pressed();
 
         // is this our key?
-        for (m = cfg.m; m && m->key != input.code; m = m->n);
+        for (m = cfg->m; m && m->key != input.code; m = m->n);
 
         // forward all other key events
         if (!m) {
@@ -199,15 +197,14 @@ main(int argc, char *argv[]) {
             case 'h':
                 return print_usage(stdout, argv[0]), EXIT_SUCCESS;
             case 'c':
-                if (configured)
+                if (cfg)
                     break;
-                read_cfg(&cfg, optarg);
-                configured = 1;
+                read_cfg(optarg);
                 continue;
         }
     }
 
-    if (!configured)
+    if (!cfg)
         return print_usage(stderr, argv[0]), EXIT_FAILURE;
 
     loop();
