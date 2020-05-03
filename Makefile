@@ -30,10 +30,7 @@ uninstall:
 ctags:
 	ctags-c $(CPPFLAGS) $(HDR) $(CSRC) $(CXXSRC)
 
-md: dfk.1
-	pandoc -s -f man -t commonmark dfk.1 -o gen.md
+doc: dfk.1
+	pandoc -f man -t gfm dfk.1 > README.md
 
-man: README.md
-	pandoc -s -f commonmark -t man README.md -o gen.1
-
-.PHONY: all clean install uninstall ctags md man
+.PHONY: all clean install uninstall ctags

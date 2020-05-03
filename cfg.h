@@ -31,9 +31,7 @@ typedef struct Cfg {
     Mapping *m;
 } Cfg;
 
-static Cfg *cfg;
-
-void read_cfg(const char *path);
+void read_cfg(Cfg *cfg, const char *path);
 
 #if __cplusplus
 } // extern "C"

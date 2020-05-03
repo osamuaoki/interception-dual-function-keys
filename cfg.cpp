@@ -26,7 +26,7 @@ event_code(const string code) {
 }
 
 void
-add_mapping(const string key, const string tap, const string hold) {
+add_mapping(Cfg *cfg, const string key, const string tap, const string hold) {
     Mapping *m, *p;
 
     m = (Mapping*)calloc(1, sizeof(Mapping));
@@ -45,9 +45,7 @@ add_mapping(const string key, const string tap, const string hold) {
 } // namespace
 
 void
-read_cfg(const char *path) {
-
-    cfg = (Cfg*)calloc(1, sizeof(Cfg));
+read_cfg(Cfg *cfg, const char *path) {
     YAML::Node config;
 
     try {
@@ -71,11 +69,10 @@ read_cfg(const char *path) {
         const auto &mappings = config["MAPPINGS"];
         for (const auto &mapping : mappings) {
             if (mapping["KEY"] && mapping["TAP"] && mapping["HOLD"]) {
-                add_mapping(
+                add_mapping(cfg,
                         mapping["KEY"].as<string>(),
                         mapping["TAP"].as<string>(),
-                        mapping["HOLD"].as<string>()
-                        );
+                        mapping["HOLD"].as<string>());
             } else {
                 stringstream out;
                 out << mapping;
