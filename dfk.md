@@ -1,3 +1,7 @@
+% DFK(1) Dual Function Keys | User Manuals
+% Alexander Courtis
+% 2020/05/03
+
 # NAME
 
 dfk - dual function keys
@@ -28,7 +32,7 @@ There are two parts to be configured: dfk and udevmon, which launches dfk.
 
 ## dfk
 
-``` yaml
+```yaml
 TIMING:
     TAP_MILLISEC: 200
     DOUBLE_TAP_MILLISEC: 150
@@ -69,7 +73,7 @@ MAPPINGS:
 
 ## udevmon
 
-``` yaml
+```yaml
 - JOB: "intercept -g $DEVNODE | dfk -c /etc/dfk.home.yaml | uinput -d $DEVNODE"
   DEVICE:
     NAME: "Metadot - Das Keyboard D4269"
@@ -95,16 +99,18 @@ MAPPINGS:
 
 # FAQ
 
-*I see you are using “q.m.k HHKB mod Keyboard” in your udevmon example. It’s using [QMK Firmware](https://qmk.fm/). Why not just use [Tap-Hold](https://docs.qmk.fm/#/tap_hold)?*
+*I see you are using "q.m.k HHKB mod Keyboard" in your udevmon example. It's using [QMK Firmware](https://qmk.fm/). Why not just use [Tap-Hold](https://docs.qmk.fm/#/tap_hold)?*
 
 Good catch\! That does indeed provide the same functionality as dfk. Unfortunately there are some drawbacks:
 
-1.  Few keyboards run QMK Firmware.
-2.  There are some issues with that functionality, as noted in the doc(https://docs.qmk.fm/\#/tap\_hold).
-3.  It requires a fast processor in the keyboard. My unscientific testing with an Ergodox (\~800 scans/sec) and HHKB (\~140) revealed that the slower keyboard is mushy and unuseably inaccurate.
+1. Few keyboards run QMK Firmware.
+2. There are some issues with that functionality, as noted in the doc(https://docs.qmk.fm/\#/tap\_hold).
+3. It requires a fast processor in the keyboard. My unscientific testing with an Ergodox (\~800 scans/sec) and HHKB (\~140) revealed that the slower keyboard is mushy and unuseably inaccurate.
 
 *Why not use [xcape](https://github.com/alols/xcape)?*
 
 Xcape only provides simple tap/hold functionality. It appears difficult (impossible?) to add the remaining functionality using its XTestFakeKeyEvent mechanisms.
 
 # SEE ALSO
+
+

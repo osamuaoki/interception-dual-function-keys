@@ -1,0 +1,17 @@
+- JOB: "intercept -g $DEVNODE | dfk -c /etc/dfk.home.yaml | uinput -d $DEVNODE"
+  DEVICE:
+    NAME: "Metadot - Das Keyboard D4269"
+- JOB: "intercept -g $DEVNODE | /home/alex/src/interception/dfk/dfk -c /etc/dfk.home.yaml | uinput -d $DEVNODE"
+  DEVICE:
+    NAME: "OLKB Planck Keyboard"
+- JOB: "intercept -g $DEVNODE | dfk -c /etc/dfk.ka2.yaml | uinput -d $DEVNODE"
+  DEVICE:
+    NAME: "Kinesis Advantage2 Keyboard"
+    EVENTS:
+      EV_KEY: [ KEY_LEFTSHIFT ]
+- JOB: "intercept -g $DEVNODE | dfk -c /etc/dfk.ka2.yaml | uinput -d $DEVNODE"
+  DEVICE:
+    NAME: "ErgoDox EZ ErgoDox EZ Keyboard"
+- JOB: "intercept -g $DEVNODE | dfk -c /etc/dfk.home.yaml | uinput -d $DEVNODE"
+  DEVICE:
+    NAME: "q.m.k HHKB mod Keyboard"
