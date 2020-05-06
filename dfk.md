@@ -41,7 +41,7 @@ Tap then press again with DOUBLE\_TAP\_MILLIS (default 150ms) to hold BS.
                 <---------200ms--------->
 keyboard:       LS↓         LS↑             LS↓               LS↑
 computer sees:  LS↓         LS↑ BS↓ BS↑     BS↓ ..(repeats).. BS↑
-``` 
+```
 
 You can continue double tapping so long as it is within the DOUBLE\_TAP\_MILLIS window.
 
@@ -62,14 +62,13 @@ keyboard:       LS↓   a↓  a↑     LS↑             LS↓          LS↑   
 computer sees:  LS↓              LS↑             LS↓          LS↑ BS↓ BS↑   BS↓ ..(repeats)..
 ```
 
-
 ## INSTALLATION
 
 Arch Linux users may install from the AUR: [interception-dfk](https://aur.archlinux.org/packages/interception-dfk).
 
 ## BUILDING
 
-See [defendencies](https://gitlab.com/interception/linux/tools#dependencies).
+See [dependencies](https://gitlab.com/interception/linux/tools#dependencies).
 
 ``` sh
 git clone git@github.com:alex-courtis/dfk.git
@@ -161,6 +160,12 @@ Some common XKB usages that might be found in your X11 configuration:
 
 ## FAQ
 
+*I have a new use case. Can you support it?*
+
+dfk has been built for my needs. I will be intrigued to hear your ideas and help you make them happen.
+
+As usual, PRs are very welcome.
+
 *I see you are using q.m.k HHKB mod Keyboard in your udevmon. It uses [QMK Firmware](https://qmk.fm/). Why not just use [Tap-Hold](https://docs.qmk.fm/#/tap_hold)?*
 
 Good catch\! That does indeed provide the same functionality as dfk. Unfortunately there are some drawbacks:
@@ -172,4 +177,12 @@ Good catch\! That does indeed provide the same functionality as dfk. Unfortunate
 *Why not use [xcape](https://github.com/alols/xcape)?*
 
 Xcape only provides simple tap/hold functionality. It appears difficult (impossible?) to add the remaining functionality using its XTestFakeKeyEvent mechanisms.
+
+## CONTRIBUTORS
+
+Please fork this repo and submit a PR.
+
+If you are making changes to the documentation, please edit the pandoc flavoured `dfk.md` and run `make doc`. Please ensure that this `README.md` and the man page `dfk.1` has your changes and commit all three.
+
+As usual, please obey `.editorconfig`.
 

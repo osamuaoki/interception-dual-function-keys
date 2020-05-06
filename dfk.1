@@ -171,6 +171,13 @@ Some common XKB usages that might be found in your X11 configuration:
 .fi
 .SH FAQ
 .PP
+\f[I]I have a new use case. Can you support it?\f[R]
+.PP
+dfk has been built for my needs.
+I will be intrigued to hear your ideas and help you make them happen.
+.PP
+As usual, PRs are very welcome.
+.PP
 \f[I]I see you are using q.m.k HHKB mod Keyboard in your udevmon. It uses QMK Firmware (https://qmk.fm/). Why not just use Tap-Hold (https://docs.qmk.fm/#/tap_hold)?\f[R]
 .PP
 Good catch! That does indeed provide the same functionality as dfk.
@@ -187,5 +194,11 @@ My unscientific testing with an Ergodox (\[ti]800 scans/sec) and HHKB (\[ti]140)
 .PP
 Xcape only provides simple tap/hold functionality.
 It appears difficult (impossible?) to add the remaining functionality using its XTestFakeKeyEvent mechanisms.
+.SH CONTRIBUTORS
+.PP
+Please clone this repo and submit a PR.
+.PP
+If you are making changes to the documentation, please edit the pandoc flavoured \f[C]dfk.md\f[R] and run \f[C]make doc\f[R].
+Please ensure that this \f[C]README.md\f[R] and the man page \f[C]dfk.1\f[R] has your changes and commit all three.
 .SH AUTHORS
 Alexander Courtis.

@@ -157,6 +157,12 @@ Some common XKB usages that might be found in your X11 configuration:
 
 ## FAQ
 
+*I have a new use case. Can you support it?*
+
+dfk has been built for my needs. I will be intrigued to hear your ideas and help you make them happen.
+
+As usual, PRs are very welcome.
+
 *I see you are using q.m.k HHKB mod Keyboard in your udevmon. It uses [QMK Firmware](https://qmk.fm/). Why not just use [Tap-Hold](https://docs.qmk.fm/#/tap_hold)?*
 
 Good catch\! That does indeed provide the same functionality as dfk. Unfortunately there are some drawbacks:
@@ -168,3 +174,9 @@ Good catch\! That does indeed provide the same functionality as dfk. Unfortunate
 *Why not use [xcape](https://github.com/alols/xcape)?*
 
 Xcape only provides simple tap/hold functionality. It appears difficult (impossible?) to add the remaining functionality using its XTestFakeKeyEvent mechanisms.
+
+## CONTRIBUTORS
+
+Please clone this repo and submit a PR.
+
+If you are making changes to the documentation, please edit the pandoc flavoured `dfk.md` and run `make doc`. Please ensure that this `README.md` and the man page `dfk.1` has your changes and commit all three.
