@@ -135,7 +135,7 @@ My `/etc/udevmon.yml`:
 Good catch\! That does indeed provide the same functionality as dfk. Unfortunately there are some drawbacks:
 
 1.  Few keyboards run QMK Firmware.
-2.  There are some issues with that functionality, as noted in the doc(https://docs.qmk.fm/\#/tap\_hold).
+2.  There are some issues with that functionality, as noted in the documentation [Tap-Hold](https://docs.qmk.fm/).
 3.  It requires a fast processor in the keyboard. My unscientific testing with an Ergodox (\~800 scans/sec) and HHKB (\~140) revealed that the slower keyboard is mushy and unuseably inaccurate.
 
 *Why not use [xcape](https://github.com/alols/xcape)?*
