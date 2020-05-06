@@ -12,13 +12,58 @@ dfk [\f[I]-h\f[R]] -c [\f[I]yaml config path\f[R]]
 .PP
 Tap for one key, hold for another.
 .PP
+Great for modifier keys e.g.\ hold for ctrl, tap for delete.
+.PP
 A plugin for interception tools (https://gitlab.com/interception/linux).
 .SH FUNCTIONALITY
 .PP
-Tap or hold is not enough to be useful.
+In these examples we will use the left shift key (LS).
+It is configured to tap for backspace (BS) and hold for LS.
 .SS Tap
+.PP
+Press and release within TAP_MILLIS (default 200ms) for ESC.
+Until the tap is complete, we get LS.
+.IP
+.nf
+\f[C]
+                <---------200ms--------->     <---------200ms--------->
+keyboard:       LS\[da]      LS\[ua]                  LS\[da]                          LS\[ua]
+computer sees:  LS\[da]      LS\[ua] BS\[da] BS\[ua]          LS\[da]                          LS\[ua]
+\f[R]
+.fi
 .SS Double Tap
+.PP
+Tap then press again with DOUBLE_TAP_MILLIS (default 150ms) to hold BS.
+.IP
+.nf
+\f[C]
+                             <-------150ms------->
+                <---------200ms--------->
+keyboard:       LS\[da]         LS\[ua]             LS\[da]                LS\[ua]
+computer sees:  LS\[da]         LS\[ua] BS\[da] BS\[ua]     BS\[da]   (repeats)    BS\[ua]
+\f[R]
+.fi
+.PP
+You can continue double tapping so long as it is within the DOUBLE_TAP_MILLIS window.
 .SS Consumption
+.PP
+Press or release another key during the TAP_MILLIS window and the tap will not occur.
+.PP
+This is especially useful for modifiers e.g.\ a quick ctrl-C.
+In this example we press the `a' key during the window.
+.PP
+Double taps do not apply after consumption; you will need to tap first.
+.IP
+.nf
+\f[C]
+                                                               <-------150ms------->
+                                                 <---------200ms--------->
+                                 <-------150ms------->
+                <---------200ms--------->
+keyboard:       LS\[da]   a\[da]  a\[ua]     LS\[ua]             LS\[da]          LS\[ua]           LS\[da]
+computer sees:  LS\[da]              LS\[ua]             LS\[da]          LS\[ua] BS\[da] BS\[ua]   BS\[da]   (repeats)
+\f[R]
+.fi
 .SH CONFIGURATION
 .PP
 There are two parts to be configured: dfk and udevmon, which launches dfk.

@@ -10,17 +10,53 @@ dfk \[*-h*\] -c \[*yaml config path*\]
 
 Tap for one key, hold for another.
 
+Great for modifier keys e.g. hold for ctrl, tap for delete.
+
 A plugin for [interception tools](https://gitlab.com/interception/linux).
 
 ## FUNCTIONALITY
 
-Tap or hold is not enough to be useful.
+In these examples we will use the left shift key (LS). It is configured to tap for backspace (BS) and hold for LS.
 
 ### Tap
 
+Press and release within TAP\_MILLIS (default 200ms) for ESC. Until the tap is complete, we get LS.
+
+``` 
+                <---------200ms--------->     <---------200ms--------->
+keyboard:       LS↓      LS↑                  LS↓                          LS↑
+computer sees:  LS↓      LS↑ BS↓ BS↑          LS↓                          LS↑
+```
+
 ### Double Tap
 
+Tap then press again with DOUBLE\_TAP\_MILLIS (default 150ms) to hold BS.
+
+``` 
+                             <-------150ms------->
+                <---------200ms--------->
+keyboard:       LS↓         LS↑             LS↓                LS↑
+computer sees:  LS↓         LS↑ BS↓ BS↑     BS↓   (repeats)    BS↑
+```
+
+You can continue double tapping so long as it is within the DOUBLE\_TAP\_MILLIS window.
+
 ### Consumption
+
+Press or release another key during the TAP\_MILLIS window and the tap will not occur.
+
+This is especially useful for modifiers e.g. a quick ctrl-C. In this example we press the ‘a’ key during the window.
+
+Double taps do not apply after consumption; you will need to tap first.
+
+``` 
+                                                               <-------150ms------->
+                                                 <---------200ms--------->
+                                 <-------150ms------->
+                <---------200ms--------->
+keyboard:       LS↓   a↓  a↑     LS↑             LS↓          LS↑           LS↓
+computer sees:  LS↓              LS↑             LS↓          LS↑ BS↓ BS↑   BS↓   (repeats)
+```
 
 ## CONFIGURATION
 
