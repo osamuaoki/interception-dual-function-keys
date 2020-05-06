@@ -6,10 +6,6 @@
 
 dfk - dual function keys
 
-## SYNOPSIS
-
-dfk \[*-h*\] -c \[*yaml config path*\]
-
 ## DESCRIPTION
 
 Tap for one key, hold for another.
@@ -75,7 +71,7 @@ Arch Linux users may install from the AUR: [interception-dfk](https://aur.archli
 
 See [defendencies](https://gitlab.com/interception/linux/tools#dependencies).
 
-```
+``` sh
 git clone git@github.com:alex-courtis/dfk.git
 cd dfk
 make && sudo make install
@@ -147,6 +143,20 @@ My `/etc/udevmon.yml`:
     NAME: "Kinesis Advantage2 Keyboard"
     EVENTS:
       EV_KEY: [ KEY_LEFTSHIFT ]
+```
+
+## CAVEATS
+
+As always, there is a caveat: dfk operates on raw *keycodes*, not *keysyms*, as seen by X11 or Wayland.
+
+If you have anything modifying the keycode-\>keysym mapping, such as [XKB](https://www.x.org/wiki/XKB/) or [xmodmap](https://wiki.archlinux.org/index.php/Xmodmap), be mindful that dfk operates before them.
+
+Some common XKB usages that might be found in your X11 configuration:
+```
+    Option "XkbModel" "pc105"
+    Option "XKbLayout" "us"
+    Option "XkbVariant" "dvp"
+    Option "XkbOptions" "caps:escape"
 ```
 
 ## FAQ

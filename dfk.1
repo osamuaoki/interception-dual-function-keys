@@ -5,9 +5,6 @@
 .SH NAME
 .PP
 dfk - dual function keys
-.SH SYNOPSIS
-.PP
-dfk [\f[I]-h\f[R]] -c [\f[I]yaml config path\f[R]]
 .SH DESCRIPTION
 .PP
 Tap for one key, hold for another.
@@ -154,6 +151,22 @@ My \f[C]/etc/udevmon.yml\f[R]:
     NAME: \[dq]Kinesis Advantage2 Keyboard\[dq]
     EVENTS:
       EV_KEY: [ KEY_LEFTSHIFT ]
+\f[R]
+.fi
+.SH CAVEATS
+.PP
+As always, there is a caveat: dfk operates on raw \f[I]keycodes\f[R], not \f[I]keysyms\f[R], as seen by X11 or Wayland.
+.PP
+If you have anything modifying the keycode->keysym mapping, such as XKB (https://www.x.org/wiki/XKB/) or xmodmap (https://wiki.archlinux.org/index.php/Xmodmap), be mindful that dfk operates before them.
+.PP
+Some common XKB usages that might be found in your X11 configuration:
+.IP
+.nf
+\f[C]
+    Option \[dq]XkbModel\[dq] \[dq]pc105\[dq]
+    Option \[dq]XKbLayout\[dq] \[dq]us\[dq]
+    Option \[dq]XkbVariant\[dq] \[dq]dvp\[dq]
+    Option \[dq]XkbOptions\[dq] \[dq]caps:escape\[dq]
 \f[R]
 .fi
 .SH FAQ
