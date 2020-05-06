@@ -62,6 +62,20 @@ keyboard:       LS↓   a↓  a↑     LS↑             LS↓          LS↑   
 computer sees:  LS↓              LS↑             LS↓          LS↑ BS↓ BS↑   BS↓ ..(repeats)..
 ```
 
+## INSTALLATION
+
+Arch Linux users may install from the AUR: [interception-dfk](https://aur.archlinux.org/packages/interception-dfk).
+
+## BUILDING
+
+See [defendencies](https://gitlab.com/interception/linux/tools#dependencies).
+
+    git clone git@github.com:alex-courtis/dfk.git
+    cd dfk
+    make && sudo make install
+
+Installation prefix defaults to `/usr/local`. This can be overridden in `config.mk`.
+
 ## CONFIGURATION
 
 There are two parts to be configured: dfk and udevmon, which launches dfk.

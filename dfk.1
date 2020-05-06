@@ -66,6 +66,23 @@ keyboard:       LS\[da]   a\[da]  a\[ua]     LS\[ua]             LS\[da]        
 computer sees:  LS\[da]              LS\[ua]             LS\[da]          LS\[ua] BS\[da] BS\[ua]   BS\[da] ..(repeats)..
 \f[R]
 .fi
+.SH INSTALLATION
+.PP
+Arch Linux users may install from the AUR: interception-dfk (https://aur.archlinux.org/packages/interception-dfk).
+.SH BUILDING
+.PP
+See defendencies (https://gitlab.com/interception/linux/tools#dependencies).
+.IP
+.nf
+\f[C]
+git clone git\[at]github.com:alex-courtis/dfk.git
+cd dfk
+make && sudo make install
+\f[R]
+.fi
+.PP
+Installation prefix defaults to \f[C]/usr/local\f[R].
+This can be overridden in \f[C]config.mk\f[R].
 .SH CONFIGURATION
 .PP
 There are two parts to be configured: dfk and udevmon, which launches dfk.
