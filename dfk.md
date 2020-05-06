@@ -68,7 +68,29 @@ computer sees:  LS↓              LS↑             LS↓          LS↑ BS↓ 
 
 There are two parts to be configured: dfk and udevmon, which launches dfk.
 
+TODO: examples folder link
+
 ### dfk
+
+This yaml file can go anywhere.
+
+You can use raw (integer) keycodes, however it is easier to use the `#define`'d strings from [input-event-codes.h](https://github.com/torvalds/linux/blob/master/include/uapi/linux/input-event-codes.h).
+
+```yaml
+# optional
+TIMING:
+    TAP_MILLISEC: <integer>
+    DOUBLE_TAP_MILLISEC: <integer>
+
+# necessary
+MAPPINGS:
+    - KEY: <integer | string>
+      TAP: <integer | string>
+      HOLD: <integer | string>
+    - KEY: ...
+```
+
+Our example from the previous section looks like:
 
 ```yaml
 TIMING:
@@ -76,63 +98,36 @@ TIMING:
     DOUBLE_TAP_MILLISEC: 150
 
 MAPPINGS:
-    - KEY: KEY_A
-      TAP: KEY_A
+    - KEY: KEY_LEFTSHIFT
+      TAP: KEY_DELETE
       HOLD: KEY_LEFTSHIFT
-
-    - KEY: KEY_S
-      TAP: KEY_S
-      HOLD: KEY_LEFTCTRL
-
-    - KEY: KEY_D
-      TAP: KEY_D
-      HOLD: KEY_LEFTALT
-
-    - KEY: KEY_F
-      TAP: KEY_F
-      HOLD: KEY_LEFTMETA
-
-    - KEY: KEY_J
-      TAP: KEY_J
-      HOLD: KEY_RIGHTMETA
-
-    - KEY: KEY_K
-      TAP: KEY_K
-      HOLD: KEY_RIGHTALT
-
-    - KEY: KEY_L
-      TAP: KEY_L
-      HOLD: KEY_RIGHTCTRL
-
-    - KEY: KEY_SEMICOLON
-      TAP: KEY_SEMICOLON
-      HOLD: KEY_RIGHTSHIFT
 ```
 
 ### udevmon
 
+udevmon needs to be informed that we desire Dual Function Keys. See [How It Works](https://gitlab.com/interception/linux/tools#how-it-works) for the full story.
+
 ```yaml
-- JOB: "intercept -g $DEVNODE | dfk -c /etc/dfk.home.yaml | uinput -d $DEVNODE"
+- JOB: "intercept -g $DEVNODE | dfk -c </path/to/dfk.yaml> | uinput -d $DEVNODE"
   DEVICE:
-    NAME: "Metadot - Das Keyboard D4269"
+    NAME: <keyboard name>
+```
 
-- JOB: "intercept -g $DEVNODE | /home/alex/src/interception/dfk/dfk -c /etc/dfk.home.yaml | uinput -d $DEVNODE"
+Usually the name is sufficient to uniquely identify the keyboard, however some keyboards register many devices e.g. a virtal mouse. You can run dfk for all the devices, however I prefer to run it only for the actual keyboard.
+
+See [uinput -p](https://gitlab.com/interception/linux/tools#how-it-works) for instructions on how to get this information.
+
+Here's my `/etc/udevmon.yml`:
+
+```yaml
+- JOB: "intercept -g $DEVNODE | dfk -c /etc/dfk.home-row-modifiers.yaml | uinput -d $DEVNODE"
   DEVICE:
-    NAME: "OLKB Planck Keyboard"
-
-- JOB: "intercept -g $DEVNODE | dfk -c /etc/dfk.ka2.yaml | uinput -d $DEVNODE"
+    NAME: "q.m.k HHKB mod Keyboard"
+- JOB: "intercept -g $DEVNODE | dfk -c /etc/dfk.kinesis-advantage-2.yaml | uinput -d $DEVNODE"
   DEVICE:
     NAME: "Kinesis Advantage2 Keyboard"
     EVENTS:
       EV_KEY: [ KEY_LEFTSHIFT ]
-
-- JOB: "intercept -g $DEVNODE | dfk -c /etc/dfk.ka2.yaml | uinput -d $DEVNODE"
-  DEVICE:
-    NAME: "ErgoDox EZ ErgoDox EZ Keyboard"
-
-- JOB: "intercept -g $DEVNODE | dfk -c /etc/dfk.home.yaml | uinput -d $DEVNODE"
-  DEVICE:
-    NAME: "q.m.k HHKB mod Keyboard"
 ```
 
 ## FAQ
