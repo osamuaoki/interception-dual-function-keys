@@ -25,7 +25,7 @@ It is configured to tap for backspace (BS) and hold for LS.
 
 ### Tap
 
-Press and release within TAP\_MILLIS (default 200ms) for ESC.
+Press and release LS within TAP\_MILLIS (default 200ms) for BS.
 Until the tap is complete, we get LS.
 
 ```
@@ -41,8 +41,8 @@ Tap then press again with DOUBLE\_TAP\_MILLIS (default 150ms) to hold BS.
 ```
                              <-------150ms------->
                 <---------200ms--------->
-keyboard:       LS↓         LS↑             LS↓                LS↑
-computer sees:  LS↓         LS↑ BS↓ BS↑     BS↓   (repeats)    BS↑
+keyboard:       LS↓         LS↑             LS↓               LS↑
+computer sees:  LS↓         LS↑ BS↓ BS↑     BS↓ ..(repeats).. BS↑
 ```
 
 You can continue double tapping so long as it is within the DOUBLE\_TAP\_MILLIS window.
@@ -61,7 +61,7 @@ Double taps do not apply after consumption; you will need to tap first.
                                  <-------150ms------->
                 <---------200ms--------->
 keyboard:       LS↓   a↓  a↑     LS↑             LS↓          LS↑           LS↓
-computer sees:  LS↓              LS↑             LS↓          LS↑ BS↓ BS↑   BS↓   (repeats)
+computer sees:  LS↓              LS↑             LS↓          LS↑ BS↓ BS↑   BS↓ ..(repeats)..
 ```
 
 ## CONFIGURATION

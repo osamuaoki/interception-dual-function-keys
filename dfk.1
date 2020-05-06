@@ -21,7 +21,7 @@ In these examples we will use the left shift key (LS).
 It is configured to tap for backspace (BS) and hold for LS.
 .SS Tap
 .PP
-Press and release within TAP_MILLIS (default 200ms) for ESC.
+Press and release LS within TAP_MILLIS (default 200ms) for BS.
 Until the tap is complete, we get LS.
 .IP
 .nf
@@ -39,8 +39,8 @@ Tap then press again with DOUBLE_TAP_MILLIS (default 150ms) to hold BS.
 \f[C]
                              <-------150ms------->
                 <---------200ms--------->
-keyboard:       LS\[da]         LS\[ua]             LS\[da]                LS\[ua]
-computer sees:  LS\[da]         LS\[ua] BS\[da] BS\[ua]     BS\[da]   (repeats)    BS\[ua]
+keyboard:       LS\[da]         LS\[ua]             LS\[da]               LS\[ua]
+computer sees:  LS\[da]         LS\[ua] BS\[da] BS\[ua]     BS\[da] ..(repeats).. BS\[ua]
 \f[R]
 .fi
 .PP
@@ -61,7 +61,7 @@ Double taps do not apply after consumption; you will need to tap first.
                                  <-------150ms------->
                 <---------200ms--------->
 keyboard:       LS\[da]   a\[da]  a\[ua]     LS\[ua]             LS\[da]          LS\[ua]           LS\[da]
-computer sees:  LS\[da]              LS\[ua]             LS\[da]          LS\[ua] BS\[da] BS\[ua]   BS\[da]   (repeats)
+computer sees:  LS\[da]              LS\[ua]             LS\[da]          LS\[ua] BS\[da] BS\[ua]   BS\[da] ..(repeats)..
 \f[R]
 .fi
 .SH CONFIGURATION
