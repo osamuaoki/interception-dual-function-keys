@@ -12,16 +12,18 @@ dfk [\f[I]-h\f[R]] -c [\f[I]yaml config path\f[R]]
 .PP
 Tap for one key, hold for another.
 .PP
-Great for modifier keys e.g.\ hold for ctrl, tap for delete.
+Great for modifier keys like: hold for ctrl, tap for delete.
 .PP
 A plugin for interception tools (https://gitlab.com/interception/linux).
 .SH FUNCTIONALITY
 .PP
 In these examples we will use the left shift key (LS).
+.PP
 It is configured to tap for backspace (BS) and hold for LS.
 .SS Tap
 .PP
 Press and release LS within TAP_MILLIS (default 200ms) for BS.
+.PP
 Until the tap is complete, we get LS.
 .IP
 .nf
@@ -49,8 +51,8 @@ You can continue double tapping so long as it is within the DOUBLE_TAP_MILLIS wi
 .PP
 Press or release another key during the TAP_MILLIS window and the tap will not occur.
 .PP
-This is especially useful for modifiers e.g.\ a quick ctrl-C.
-In this example we press the `a' key during the window.
+This is especially useful for modifiers, for instance a quick ctrl-C.
+In this example we press the a key during the window.
 .PP
 Double taps do not apply after consumption; you will need to tap first.
 .IP
@@ -68,12 +70,12 @@ computer sees:  LS\[da]              LS\[ua]             LS\[da]          LS\[ua
 .PP
 There are two parts to be configured: dfk and udevmon, which launches dfk.
 .PP
-TODO: examples folder link
+See examples (https://github.com/alex-courtis/dfk/tree/master/examples) which contains dfk and udevmon configurations.
 .SS dfk
 .PP
 This yaml file can go anywhere.
 .PP
-You can use raw (integer) keycodes, however it is easier to use the \f[C]#define\f[R]\[cq]d strings from input-event-codes.h (https://github.com/torvalds/linux/blob/master/include/uapi/linux/input-event-codes.h).
+You can use raw (integer) keycodes, however it is easier to use the \f[C]#define\f[R]d strings from input-event-codes.h (https://github.com/torvalds/linux/blob/master/include/uapi/linux/input-event-codes.h).
 .IP
 .nf
 \f[C]
@@ -118,19 +120,19 @@ See How It Works (https://gitlab.com/interception/linux/tools#how-it-works) for 
 \f[R]
 .fi
 .PP
-Usually the name is sufficient to uniquely identify the keyboard, however some keyboards register many devices e.g.\ a virtal mouse.
+Usually the name is sufficient to uniquely identify the keyboard, however some keyboards register many devices such as a virtal mouse.
 You can run dfk for all the devices, however I prefer to run it only for the actual keyboard.
 .PP
 See uinput -p (https://gitlab.com/interception/linux/tools#how-it-works) for instructions on how to get this information.
 .PP
-Here\[cq]s my \f[C]/etc/udevmon.yml\f[R]:
+My \f[C]/etc/udevmon.yml\f[R]:
 .IP
 .nf
 \f[C]
-- JOB: \[dq]intercept -g $DEVNODE | dfk -c /etc/home-row-modifiers.yaml | uinput -d $DEVNODE\[dq]
+- JOB: \[dq]intercept -g $DEVNODE | dfk -c /etc/dfk.home-row-modifiers.yaml | uinput -d $DEVNODE\[dq]
   DEVICE:
-    NAME: \[dq]OLKB Planck Keyboard\[dq]
-- JOB: \[dq]intercept -g $DEVNODE | dfk -c /etc/kinesis-advantage-2.yaml | uinput -d $DEVNODE\[dq]
+    NAME: \[dq]q.m.k HHKB mod Keyboard\[dq]
+- JOB: \[dq]intercept -g $DEVNODE | dfk -c /etc/dfk.kinesis-advantage-2.yaml | uinput -d $DEVNODE\[dq]
   DEVICE:
     NAME: \[dq]Kinesis Advantage2 Keyboard\[dq]
     EVENTS:
@@ -139,7 +141,7 @@ Here\[cq]s my \f[C]/etc/udevmon.yml\f[R]:
 .fi
 .SH FAQ
 .PP
-\f[I]I see you are using \[lq]q.m.k HHKB mod Keyboard\[rq] in your udevmon example. It\[cq]s using QMK Firmware (https://qmk.fm/). Why not just use Tap-Hold (https://docs.qmk.fm/#/tap_hold)?\f[R]
+\f[I]I see you are using q.m.k HHKB mod Keyboard in your udevmon. It uses QMK Firmware (https://qmk.fm/). Why not just use Tap-Hold (https://docs.qmk.fm/#/tap_hold)?\f[R]
 .PP
 Good catch! That does indeed provide the same functionality as dfk.
 Unfortunately there are some drawbacks:

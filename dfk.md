@@ -14,18 +14,20 @@ dfk \[*-h*\] -c \[*yaml config path*\]
 
 Tap for one key, hold for another.
 
-Great for modifier keys e.g. hold for ctrl, tap for delete.
+Great for modifier keys like: hold for ctrl, tap for delete.
 
 A plugin for [interception tools](https://gitlab.com/interception/linux).
 
 ## FUNCTIONALITY
 
 In these examples we will use the left shift key (LS).
+
 It is configured to tap for backspace (BS) and hold for LS.
 
 ### Tap
 
 Press and release LS within TAP\_MILLIS (default 200ms) for BS.
+
 Until the tap is complete, we get LS.
 
 ```
@@ -43,7 +45,7 @@ Tap then press again with DOUBLE\_TAP\_MILLIS (default 150ms) to hold BS.
                 <---------200ms--------->
 keyboard:       LS↓         LS↑             LS↓               LS↑
 computer sees:  LS↓         LS↑ BS↓ BS↑     BS↓ ..(repeats).. BS↑
-```
+``` 
 
 You can continue double tapping so long as it is within the DOUBLE\_TAP\_MILLIS window.
 
@@ -51,7 +53,7 @@ You can continue double tapping so long as it is within the DOUBLE\_TAP\_MILLIS 
 
 Press or release another key during the TAP\_MILLIS window and the tap will not occur.
 
-This is especially useful for modifiers e.g. a quick ctrl-C. In this example we press the 'a' key during the window.
+This is especially useful for modifiers, for instance a quick ctrl-C. In this example we press the a key during the window.
 
 Double taps do not apply after consumption; you will need to tap first.
 
@@ -68,15 +70,15 @@ computer sees:  LS↓              LS↑             LS↓          LS↑ BS↓ 
 
 There are two parts to be configured: dfk and udevmon, which launches dfk.
 
-TODO: examples folder link
+See [examples](https://github.com/alex-courtis/dfk/tree/master/examples) which contains dfk and udevmon configurations.
 
 ### dfk
 
 This yaml file can go anywhere.
 
-You can use raw (integer) keycodes, however it is easier to use the `#define`'d strings from [input-event-codes.h](https://github.com/torvalds/linux/blob/master/include/uapi/linux/input-event-codes.h).
+You can use raw (integer) keycodes, however it is easier to use the `#define`d strings from [input-event-codes.h](https://github.com/torvalds/linux/blob/master/include/uapi/linux/input-event-codes.h).
 
-```yaml
+``` yaml
 # optional
 TIMING:
     TAP_MILLISEC: <integer>
@@ -92,7 +94,7 @@ MAPPINGS:
 
 Our example from the previous section looks like:
 
-```yaml
+``` yaml
 TIMING:
     TAP_MILLISEC: 200
     DOUBLE_TAP_MILLISEC: 150
@@ -107,19 +109,19 @@ MAPPINGS:
 
 udevmon needs to be informed that we desire Dual Function Keys. See [How It Works](https://gitlab.com/interception/linux/tools#how-it-works) for the full story.
 
-```yaml
+``` yaml
 - JOB: "intercept -g $DEVNODE | dfk -c </path/to/dfk.yaml> | uinput -d $DEVNODE"
   DEVICE:
     NAME: <keyboard name>
 ```
 
-Usually the name is sufficient to uniquely identify the keyboard, however some keyboards register many devices e.g. a virtal mouse. You can run dfk for all the devices, however I prefer to run it only for the actual keyboard.
+Usually the name is sufficient to uniquely identify the keyboard, however some keyboards register many devices such as a virtal mouse. You can run dfk for all the devices, however I prefer to run it only for the actual keyboard.
 
 See [uinput -p](https://gitlab.com/interception/linux/tools#how-it-works) for instructions on how to get this information.
 
-Here's my `/etc/udevmon.yml`:
+My `/etc/udevmon.yml`:
 
-```yaml
+``` yaml
 - JOB: "intercept -g $DEVNODE | dfk -c /etc/dfk.home-row-modifiers.yaml | uinput -d $DEVNODE"
   DEVICE:
     NAME: "q.m.k HHKB mod Keyboard"
@@ -132,13 +134,13 @@ Here's my `/etc/udevmon.yml`:
 
 ## FAQ
 
-*I see you are using "q.m.k HHKB mod Keyboard" in your udevmon example. It's using [QMK Firmware](https://qmk.fm/). Why not just use [Tap-Hold](https://docs.qmk.fm/#/tap_hold)?*
+*I see you are using q.m.k HHKB mod Keyboard in your udevmon. It uses [QMK Firmware](https://qmk.fm/). Why not just use [Tap-Hold](https://docs.qmk.fm/#/tap_hold)?*
 
 Good catch\! That does indeed provide the same functionality as dfk. Unfortunately there are some drawbacks:
 
-1. Few keyboards run QMK Firmware.
-2. There are some issues with that functionality, as noted in the doc(https://docs.qmk.fm/\#/tap\_hold).
-3. It requires a fast processor in the keyboard. My unscientific testing with an Ergodox (\~800 scans/sec) and HHKB (\~140) revealed that the slower keyboard is mushy and unuseably inaccurate.
+1.  Few keyboards run QMK Firmware.
+2.  There are some issues with that functionality, as noted in the doc(https://docs.qmk.fm/\#/tap\_hold).
+3.  It requires a fast processor in the keyboard. My unscientific testing with an Ergodox (\~800 scans/sec) and HHKB (\~140) revealed that the slower keyboard is mushy and unuseably inaccurate.
 
 *Why not use [xcape](https://github.com/alols/xcape)?*
 

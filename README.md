@@ -10,17 +10,21 @@ dfk \[*-h*\] -c \[*yaml config path*\]
 
 Tap for one key, hold for another.
 
-Great for modifier keys e.g. hold for ctrl, tap for delete.
+Great for modifier keys like: hold for ctrl, tap for delete.
 
 A plugin for [interception tools](https://gitlab.com/interception/linux).
 
 ## FUNCTIONALITY
 
-In these examples we will use the left shift key (LS). It is configured to tap for backspace (BS) and hold for LS.
+In these examples we will use the left shift key (LS).
+
+It is configured to tap for backspace (BS) and hold for LS.
 
 ### Tap
 
-Press and release LS within TAP\_MILLIS (default 200ms) for BS. Until the tap is complete, we get LS.
+Press and release LS within TAP\_MILLIS (default 200ms) for BS.
+
+Until the tap is complete, we get LS.
 
 ``` 
                 <---------200ms--------->     <---------200ms--------->
@@ -45,7 +49,7 @@ You can continue double tapping so long as it is within the DOUBLE\_TAP\_MILLIS 
 
 Press or release another key during the TAP\_MILLIS window and the tap will not occur.
 
-This is especially useful for modifiers e.g. a quick ctrl-C. In this example we press the ‘a’ key during the window.
+This is especially useful for modifiers, for instance a quick ctrl-C. In this example we press the a key during the window.
 
 Double taps do not apply after consumption; you will need to tap first.
 
@@ -62,13 +66,13 @@ computer sees:  LS↓              LS↑             LS↓          LS↑ BS↓ 
 
 There are two parts to be configured: dfk and udevmon, which launches dfk.
 
-TODO: examples folder link
+See [examples](https://github.com/alex-courtis/dfk/tree/master/examples) which contains dfk and udevmon configurations.
 
 ### dfk
 
 This yaml file can go anywhere.
 
-You can use raw (integer) keycodes, however it is easier to use the `#define`’d strings from [input-event-codes.h](https://github.com/torvalds/linux/blob/master/include/uapi/linux/input-event-codes.h).
+You can use raw (integer) keycodes, however it is easier to use the `#define`d strings from [input-event-codes.h](https://github.com/torvalds/linux/blob/master/include/uapi/linux/input-event-codes.h).
 
 ``` yaml
 # optional
@@ -107,17 +111,17 @@ udevmon needs to be informed that we desire Dual Function Keys. See [How It Work
     NAME: <keyboard name>
 ```
 
-Usually the name is sufficient to uniquely identify the keyboard, however some keyboards register many devices e.g. a virtal mouse. You can run dfk for all the devices, however I prefer to run it only for the actual keyboard.
+Usually the name is sufficient to uniquely identify the keyboard, however some keyboards register many devices such as a virtal mouse. You can run dfk for all the devices, however I prefer to run it only for the actual keyboard.
 
 See [uinput -p](https://gitlab.com/interception/linux/tools#how-it-works) for instructions on how to get this information.
 
-Here’s my `/etc/udevmon.yml`:
+My `/etc/udevmon.yml`:
 
 ``` yaml
-- JOB: "intercept -g $DEVNODE | dfk -c /etc/home-row-modifiers.yaml | uinput -d $DEVNODE"
+- JOB: "intercept -g $DEVNODE | dfk -c /etc/dfk.home-row-modifiers.yaml | uinput -d $DEVNODE"
   DEVICE:
-    NAME: "OLKB Planck Keyboard"
-- JOB: "intercept -g $DEVNODE | dfk -c /etc/kinesis-advantage-2.yaml | uinput -d $DEVNODE"
+    NAME: "q.m.k HHKB mod Keyboard"
+- JOB: "intercept -g $DEVNODE | dfk -c /etc/dfk.kinesis-advantage-2.yaml | uinput -d $DEVNODE"
   DEVICE:
     NAME: "Kinesis Advantage2 Keyboard"
     EVENTS:
@@ -126,7 +130,7 @@ Here’s my `/etc/udevmon.yml`:
 
 ## FAQ
 
-*I see you are using “q.m.k HHKB mod Keyboard” in your udevmon example. It’s using [QMK Firmware](https://qmk.fm/). Why not just use [Tap-Hold](https://docs.qmk.fm/#/tap_hold)?*
+*I see you are using q.m.k HHKB mod Keyboard in your udevmon. It uses [QMK Firmware](https://qmk.fm/). Why not just use [Tap-Hold](https://docs.qmk.fm/#/tap_hold)?*
 
 Good catch\! That does indeed provide the same functionality as dfk. Unfortunately there are some drawbacks:
 
