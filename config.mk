@@ -1,8 +1,10 @@
+VERSION = 1.0.0
+
 PREFIX = /usr/local
 
 INCS = -I/usr/include/libevdev-1.0
 
-CPPFLAGS = $(INCS)
+CPPFLAGS = $(INCS) -DVERSION=\"$(VERSION)\"
 
 COMPFLAGS = -pedantic -Wall -Wextra -O3
 CFLAGS = $(COMPFLAGS) -std=c99
