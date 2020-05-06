@@ -186,3 +186,8 @@ If you are making changes to the documentation, please edit the pandoc flavoured
 
 As usual, please obey `.editorconfig`.
 
+## LICENSE
+
+<a href="https://gitlab.com/interception/linux/plugins/caps2esc/blob/master/LICENSE.md"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/0b/License_icon-mit-2.svg/120px-License_icon-mit-2.svg.png" alt="MIT"></a>
+
+Copyright © 2020 Alexander Courtis
