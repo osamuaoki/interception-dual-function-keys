@@ -12,6 +12,8 @@ Tap for one key, hold for another.
 
 Great for modifier keys like: hold for ctrl, tap for delete.
 
+A hand-saver for those with restricted finger mobility.
+
 A plugin for [interception tools](https://gitlab.com/interception/linux).
 
 ## FUNCTIONALITY
@@ -161,6 +163,8 @@ Some common XKB usages that might be found in your X11 configuration:
 ## FAQ
 
 *I have a new use case. Can you support it?*
+
+Please raise an issue.
 
 dfk has been built for my needs. I will be intrigued to hear your ideas and help you make them happen.
 
