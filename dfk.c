@@ -202,15 +202,15 @@ loop() {
 void
 print_usage(FILE *stream, const char *program) {
     fprintf(stream,
-            "dfk - dual function keys plugin for interception tools:\n"
+            "dual-function-keys plugin for interception tools:\n"
             "        https://gitlab.com/interception/linux/tools\n"
             "\n"
             "usage: %s [-v] [-h] -c /path/to/dfk.config.yaml\n"
             "\n"
             "options:\n"
-            "    -v                           show version and exit\n"
-            "    -h                           show this message and exit\n"
-            "    -c /path/to/dfk.config.yaml  use dfk.config.yaml\n",
+            "    -v                     show version and exit\n"
+            "    -h                     show this message and exit\n"
+            "    -c /path/to/cfg.yaml   use cfg.yaml\n",
             program);
 }
 
@@ -223,7 +223,7 @@ main(int argc, char *argv[]) {
     while ((opt = getopt(argc, argv, "vhc:")) != -1) {
         switch (opt) {
             case 'v':
-                return fprintf(stdout, "dfk version %s\n", VERSION), EXIT_SUCCESS;
+                return fprintf(stdout, "dual-function-keys version %s\n", VERSION), EXIT_SUCCESS;
             case 'h':
                 return print_usage(stdout, argv[0]), EXIT_SUCCESS;
             case 'c':

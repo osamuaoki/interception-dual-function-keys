@@ -1,10 +1,10 @@
-% DFK(1) Dual Function Keys | User Manuals
+% DUAL-FUNCTION-KEYS(1) Dual Function Keys | User Manuals
 % Alexander Courtis
 % 2020/05/03
 
 ## NAME
 
-dfk - dual function keys
+interception - dual function keys
 
 ## DESCRIPTION
 
@@ -66,7 +66,7 @@ computer sees:  LS↓              LS↑             LS↓          LS↑ BS↓ 
 
 ## INSTALLATION
 
-Arch Linux users may install from the AUR: [interception-dfk](https://aur.archlinux.org/packages/interception-dfk).
+Arch Linux users may install from the AUR: [interception-dual-function-keys](https://aur.archlinux.org/packages/interception-dual-function-keys).
 
 ## BUILDING
 
@@ -82,11 +82,11 @@ Installation prefix defaults to `/usr/local`. This can be overridden in `config.
 
 ## CONFIGURATION
 
-There are two parts to be configured: dfk and udevmon, which launches dfk.
+There are two parts to be configured: dual-function-keys and udevmon, which launches dual-function-keys.
 
-See [examples](https://gitlab.com/interception/linux/plugins/dual-function-keys/-/tree/master/examples) which contains dfk and udevmon configurations.
+See [examples](https://gitlab.com/interception/linux/plugins/dual-function-keys/-/tree/master/examples) which contains dual-function-keys and udevmon configurations.
 
-### dfk
+### dual-function-keys
 
 This yaml file can go anywhere.
 
@@ -124,22 +124,22 @@ MAPPINGS:
 udevmon needs to be informed that we desire Dual Function Keys. See [How It Works](https://gitlab.com/interception/linux/tools#how-it-works) for the full story.
 
 ``` yaml
-- JOB: "intercept -g $DEVNODE | dfk -c </path/to/dfk.yaml> | uinput -d $DEVNODE"
+- JOB: "intercept -g $DEVNODE | dual-function-keys -c </path/to/dual-function-keys.yaml> | uinput -d $DEVNODE"
   DEVICE:
     NAME: <keyboard name>
 ```
 
-Usually the name is sufficient to uniquely identify the keyboard, however some keyboards register many devices such as a virtal mouse. You can run dfk for all the devices, however I prefer to run it only for the actual keyboard.
+Usually the name is sufficient to uniquely identify the keyboard, however some keyboards register many devices such as a virtal mouse. You can run dual-function-keys for all the devices, however I prefer to run it only for the actual keyboard.
 
 See [uinput -p](https://gitlab.com/interception/linux/tools#how-it-works) for instructions on how to get this information.
 
 My `/etc/udevmon.yml`:
 
 ``` yaml
-- JOB: "intercept -g $DEVNODE | dfk -c /etc/dfk.home-row-modifiers.yaml | uinput -d $DEVNODE"
+- JOB: "intercept -g $DEVNODE | dual-function-keys -c /etc/dfk.home-row-modifiers.yaml | uinput -d $DEVNODE"
   DEVICE:
     NAME: "q.m.k HHKB mod Keyboard"
-- JOB: "intercept -g $DEVNODE | dfk -c /etc/dfk.kinesis-advantage-2.yaml | uinput -d $DEVNODE"
+- JOB: "intercept -g $DEVNODE | dual-function-keys -c /etc/dfk.kinesis-advantage-2.yaml | uinput -d $DEVNODE"
   DEVICE:
     NAME: "Kinesis Advantage2 Keyboard"
     EVENTS:
@@ -148,9 +148,9 @@ My `/etc/udevmon.yml`:
 
 ## CAVEATS
 
-As always, there is a caveat: dfk operates on raw *keycodes*, not *keysyms*, as seen by X11 or Wayland.
+As always, there is a caveat: dual-function-keys operates on raw *keycodes*, not *keysyms*, as seen by X11 or Wayland.
 
-If you have anything modifying the keycode-\>keysym mapping, such as [XKB](https://www.x.org/wiki/XKB/) or [xmodmap](https://wiki.archlinux.org/index.php/Xmodmap), be mindful that dfk operates before them.
+If you have anything modifying the keycode-\>keysym mapping, such as [XKB](https://www.x.org/wiki/XKB/) or [xmodmap](https://wiki.archlinux.org/index.php/Xmodmap), be mindful that dual-function-keys operates before them.
 
 Some common XKB usages that might be found in your X11 configuration:
 ```
@@ -166,13 +166,13 @@ Some common XKB usages that might be found in your X11 configuration:
 
 Please raise an issue.
 
-dfk has been built for my needs. I will be intrigued to hear your ideas and help you make them happen.
+dual-function-keys has been built for my needs. I will be intrigued to hear your ideas and help you make them happen.
 
 As usual, PRs are very welcome.
 
 *I see you are using q.m.k HHKB mod Keyboard in your udevmon. It uses [QMK Firmware](https://qmk.fm/). Why not just use [Tap-Hold](https://docs.qmk.fm/#/tap_hold)?*
 
-Good catch\! That does indeed provide the same functionality as dfk. Unfortunately there are some drawbacks:
+Good catch\! That does indeed provide the same functionality as dual-function-keys. Unfortunately there are some drawbacks:
 
 1.  Few keyboards run QMK Firmware.
 2.  There are some issues with that functionality, as noted in the documentation [Tap-Hold](https://docs.qmk.fm/).
@@ -186,7 +186,7 @@ Xcape only provides simple tap/hold functionality. It appears difficult (impossi
 
 Please fork this repo and submit a PR.
 
-If you are making changes to the documentation, please edit the pandoc flavoured `dfk.md` and run `make doc`. Please ensure that this `README.md` and the man page `dfk.1` has your changes and commit all three.
+If you are making changes to the documentation, please edit the pandoc flavoured `dual-function-keys.md` and run `make doc`. Please ensure that this `README.md` and the man page `dual-function-keys.1` has your changes and commit all three.
 
 As usual, please obey `.editorconfig`.
 

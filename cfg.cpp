@@ -51,7 +51,7 @@ read_cfg(Cfg *cfg, const char *path) {
     try {
         config = YAML::LoadFile(path);
     } catch (const exception &e) {
-        fprintf(stderr, "dfk: cannot read '%s': %s\n", path, e.what());
+        fprintf(stderr, "dual-function-keys: cannot read '%s': %s\n", path, e.what());
         exit(EXIT_FAILURE);
     }
 
@@ -80,7 +80,7 @@ read_cfg(Cfg *cfg, const char *path) {
             }
         }
     } catch (const exception &e) {
-        fprintf(stderr, "dfk: cannot parse '%s': %s\n", path, e.what());
+        fprintf(stderr, "dual-function-keys: cannot parse '%s': %s\n", path, e.what());
         exit(EXIT_FAILURE);
     }
 }
