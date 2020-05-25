@@ -1,6 +1,6 @@
 VERSION = 1.0.0
 
-PREFIX = /usr/local
+PREFIX = /usr
 
 INCS = -I/usr/include/libevdev-1.0
 
