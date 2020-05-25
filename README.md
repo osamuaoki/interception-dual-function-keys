@@ -69,8 +69,8 @@ Arch Linux users may install from the AUR: [interception-dfk](https://aur.archli
 See [dependencies](https://gitlab.com/interception/linux/tools#dependencies).
 
 ``` sh
-git clone git@github.com:alex-courtis/dfk.git
-cd dfk
+git clone git@gitlab.com:interception/linux/plugins/dual-function-keys.git
+cd dual-function-keys
 make && sudo make install
 ```
 
@@ -80,7 +80,7 @@ Installation prefix defaults to `/usr/local`. This can be overridden in `config.
 
 There are two parts to be configured: dfk and udevmon, which launches dfk.
 
-See [examples](https://github.com/alex-courtis/dfk/tree/master/examples) which contains dfk and udevmon configurations.
+See [examples](https://gitlab.com/interception/linux/plugins/dual-function-keys/-/tree/master/examples) which contains dfk and udevmon configurations.
 
 ### dfk
 
