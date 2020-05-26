@@ -74,7 +74,7 @@ cd dual-function-keys
 make && sudo make install
 ```
 
-Installation prefix defaults to `/usr`. This can be overridden in `config.mk`.
+Installation prefix defaults to `/usr/local`. This can be overridden in `config.mk`.
 
 ## CONFIGURATION
 
