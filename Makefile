@@ -17,16 +17,16 @@ clean:
 	rm -f dual-function-keys $(OBJ)
 
 install:
-	mkdir -p $(PREFIX)/bin
-	cp -f dual-function-keys $(PREFIX)/bin
-	chmod 755 $(PREFIX)/bin/dual-function-keys
-	mkdir -p $(PREFIX)/man/man1
-	cp dual-function-keys.1 $(PREFIX)/man/man1
-	chmod 644 $(PREFIX)/man/man1/dual-function-keys.1
+	mkdir -p $(DESTDIR)$(PREFIX)/bin
+	cp -f dual-function-keys $(DESTDIR)$(PREFIX)/bin
+	chmod 755 $(DESTDIR)$(PREFIX)/bin/dual-function-keys
+	mkdir -p $(DESTDIR)$(PREFIX)/man/man1
+	cp dual-function-keys.1 $(DESTDIR)$(PREFIX)/man/man1
+	chmod 644 $(DESTDIR)$(PREFIX)/man/man1/dual-function-keys.1
 
 uninstall:
-	rm -f $(PREFIX)/bin/dual-function-keys
-	rm -f $(PREFIX)/man/man1/dual-function-keys.1
+	rm -f $(DESTDIR)$(PREFIX)/bin/dual-function-keys
+	rm -f $(DESTDIR)$(PREFIX)/man/man1/dual-function-keys.1
 
 # https://github.com/alex-courtis/arch/blob/b530f331dacaaba27484593a87ca20a9f53ab73f/home/bin/ctags-something
 ctags:
