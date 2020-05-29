@@ -73,7 +73,7 @@ Arch Linux users may install from the AUR: [interception-dual-function-keys](htt
 See [dependencies](https://gitlab.com/interception/linux/tools#dependencies).
 
 ``` sh
-git clone git@gitlab.com:interception/linux/plugins/dual-function-keys.git
+git clone https://gitlab.com/interception/linux/plugins/dual-function-keys.git
 cd dual-function-keys
 make && sudo make install
 ```
