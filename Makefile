@@ -11,7 +11,7 @@ all: dual-function-keys
 $(OBJ): config.mk $(HDR)
 
 dual-function-keys: $(OBJ)
-	$(CC) $(LDFLAGS) $(OBJ) -o dual-function-keys
+	$(CXX) $(OBJ) $(LDFLAGS) -o dual-function-keys
 
 clean:
 	rm -f dual-function-keys $(OBJ)

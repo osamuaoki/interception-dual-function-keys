@@ -10,8 +10,8 @@ COMPFLAGS = -pedantic -Wall -Wextra -O3
 CFLAGS = $(COMPFLAGS) -std=c99
 CXXFLAGS = $(COMPFLAGS) -std=c++11
 
-LDFLAGS = -lstdc++ -lyaml-cpp -levdev
+LDFLAGS = -rdynamic -lyaml-cpp -levdev
 
 CC = cc
-CXX = g++
+CXX = c++
 
