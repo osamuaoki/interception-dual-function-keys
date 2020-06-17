@@ -16,10 +16,15 @@ typedef enum State {
     CONSUMED,
 } State;
 
+typedef struct Tap {
+    int code;
+    struct Tap *n;
+} Tap;
+
 typedef struct Mapping {
     int key;
-    int tap;
     int hold;
+    Tap *tap;
     State state;
     struct timeval changed;
     struct Mapping *n;

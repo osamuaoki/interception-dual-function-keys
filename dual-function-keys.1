@@ -103,7 +103,7 @@ TIMING:
 # necessary
 MAPPINGS:
     - KEY: <integer | string>
-      TAP: <integer | string>
+      TAP: [ <integer | string>, ... ]
       HOLD: <integer | string>
     - KEY: ...
 \f[R]
@@ -120,6 +120,17 @@ TIMING:
 MAPPINGS:
     - KEY: KEY_LEFTSHIFT
       TAP: KEY_DELETE
+      HOLD: KEY_LEFTSHIFT
+\f[R]
+.fi
+.PP
+You can configure the \f[C]TAP\f[R] as a \[lq]combo\[rq], which will send multiple keys in order e.g.\ space cadet \f[C](\f[R]:
+.IP
+.nf
+\f[C]
+MAPPINGS:
+    - KEY: KEY_LEFTSHIFT
+      TAP: [ KEY_LEFTSHIFT, KEY_9, ]
       HOLD: KEY_LEFTSHIFT
 \f[R]
 .fi

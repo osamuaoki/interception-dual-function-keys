@@ -1,7 +1,8 @@
 #include "cfg.h"
+#include <getopt.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <getopt.h>
+#include <unistd.h>
 #include <linux/input.h>
 #include <sys/time.h>
 
@@ -24,6 +25,18 @@ void
 write_event(const struct input_event *event) {
     if (fwrite(event, sizeof(struct input_event), 1, stdout) != 1)
         exit(EXIT_FAILURE);
+}
+
+void
+tap(Mapping *m, unsigned int value) {
+    static struct input_event input = { .type = EV_KEY, };
+    Tap *t;
+
+    input.value = value;
+    for (t = m->tap; t; t = t->n) {
+        input.code = t->code;
+        write_event(&input);
+    }
 }
 
 void
@@ -51,16 +64,15 @@ handle_press(Mapping *m, struct input_event *input) {
     switch (m->state) {
         case TAPPED:
         case DOUBLETAPPED:
-            input->code = m->tap;
+            tap(m, INPUT_VAL_PRESS);
             break;
         case RELEASED:
         case PRESSED:
         case CONSUMED:
             input->code = m->hold;
+            write_event(input);
             break;
     }
-
-    write_event(input);
 }
 
 void
@@ -92,37 +104,12 @@ handle_release(Mapping *m, struct input_event *input) {
             input->code = m->hold;
             write_event(input);
 
-            // synthesize tap press/release
-            input->value = 1;
-            input->code = m->tap;
-            write_event(input);
-            input->value = 0;
-            write_event(input);
+            // synthesize tap
+            tap(m, INPUT_VAL_PRESS);
+            tap(m, INPUT_VAL_RELEASE);
             break;
         case DOUBLETAPPED:
-            input->code = m->tap;
-            write_event(input);
-            break;
-        case CONSUMED:
-        case RELEASED:
-        case PRESSED:
-            input->code = m->hold;
-            write_event(input);
-            break;
-    }
-}
-
-void
-handle_repeat(Mapping *m, struct input_event *input) {
-
-    // no state change
-
-    // action
-    switch (m->state) {
-        case TAPPED:
-        case DOUBLETAPPED:
-            input->code = m->tap;
-            write_event(input);
+            tap(m, INPUT_VAL_RELEASE);
             break;
         case CONSUMED:
         case RELEASED:
@@ -188,7 +175,7 @@ loop() {
                 handle_release(m, &input);
                 break;
             case INPUT_VAL_REPEAT:
-                handle_repeat(m, &input);
+                // linux console, X, wayland handles repeat
                 break;
             default:
                 fprintf(stderr, "unexpected .value=%d .code=%d, doing nothing",
@@ -205,7 +192,7 @@ print_usage(FILE *stream, const char *program) {
             "dual-function-keys plugin for interception tools:\n"
             "        https://gitlab.com/interception/linux/tools\n"
             "\n"
-            "usage: %s [-v] [-h] -c /path/to/dfk.config.yaml\n"
+            "usage: %s [-v] [-h] -c /path/to/cfg.yaml\n"
             "\n"
             "options:\n"
             "    -v                     show version and exit\n"
