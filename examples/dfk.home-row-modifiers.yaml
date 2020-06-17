@@ -2,6 +2,7 @@ TIMING:
   TAP_MILLISEC: 200
   DOUBLE_TAP_MILLISEC: 150
 
+# hold home row keys for modifiers
 MAPPINGS:
   - KEY: KEY_A
     TAP: KEY_A

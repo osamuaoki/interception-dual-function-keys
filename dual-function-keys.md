@@ -101,7 +101,7 @@ TIMING:
 # necessary
 MAPPINGS:
     - KEY: <integer | string>
-      TAP: <integer | string>
+      TAP: [ <integer | string>, ... ]
       HOLD: <integer | string>
     - KEY: ...
 ```
@@ -116,6 +116,15 @@ TIMING:
 MAPPINGS:
     - KEY: KEY_LEFTSHIFT
       TAP: KEY_DELETE
+      HOLD: KEY_LEFTSHIFT
+```
+
+You can configure the `TAP` as a "combo", which will send multiple keys in order e.g. space cadet `(`:
+
+```YAML
+MAPPINGS:
+    - KEY: KEY_LEFTSHIFT
+      TAP: [ KEY_LEFTSHIFT, KEY_9, ]
       HOLD: KEY_LEFTSHIFT
 ```
 
