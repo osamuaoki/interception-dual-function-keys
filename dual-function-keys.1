@@ -147,10 +147,22 @@ See How It Works (https://gitlab.com/interception/linux/tools#how-it-works) for 
 \f[R]
 .fi
 .PP
+The name may be determined by executing:
+.IP
+.nf
+\f[C]
+sudo uinput -p -d /dev/input/by-id/X
+\f[R]
+.fi
+.PP
+where X is the device with the name that looks like your keyboard.
+Ensure that all \f[C]EV_KEY\f[R]s are present under \f[C]EVENTS\f[R].
+If you can\[cq]t find your keyboard under \f[C]/dev/input/by-id\f[R], look at devices directly under \f[C]/dev/input\f[R].
+.PP
+See Interception Tools: How It Works (https://gitlab.com/interception/linux/tools#how-it-works) for more information on \f[C]uinput -p\f[R].
+.PP
 Usually the name is sufficient to uniquely identify the keyboard, however some keyboards register many devices such as a virtal mouse.
 You can run dual-function-keys for all the devices, however I prefer to run it only for the actual keyboard.
-.PP
-See uinput -p (https://gitlab.com/interception/linux/tools#how-it-works) for instructions on how to get this information.
 .PP
 My \f[C]/etc/udevmon.yml\f[R]:
 .IP

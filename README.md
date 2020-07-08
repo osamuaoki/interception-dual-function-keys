@@ -134,9 +134,17 @@ udevmon needs to be informed that we desire Dual Function Keys. See [How It Work
     NAME: <keyboard name>
 ```
 
-Usually the name is sufficient to uniquely identify the keyboard, however some keyboards register many devices such as a virtal mouse. You can run dual-function-keys for all the devices, however I prefer to run it only for the actual keyboard.
+The name may be determined by executing:
 
-See [uinput -p](https://gitlab.com/interception/linux/tools#how-it-works) for instructions on how to get this information.
+``` sh
+sudo uinput -p -d /dev/input/by-id/X
+```
+
+where X is the device with the name that looks like your keyboard. Ensure that all `EV_KEY`s are present under `EVENTS`. If you can’t find your keyboard under `/dev/input/by-id`, look at devices directly under `/dev/input`.
+
+See [Interception Tools: How It Works](https://gitlab.com/interception/linux/tools#how-it-works) for more information on `uinput -p`.
+
+Usually the name is sufficient to uniquely identify the keyboard, however some keyboards register many devices such as a virtal mouse. You can run dual-function-keys for all the devices, however I prefer to run it only for the actual keyboard.
 
 My `/etc/udevmon.yml`:
 
