@@ -62,11 +62,15 @@ computer sees:  LS↓              LS↑             LS↓          LS↑ BS↓ 
 
 ## INSTALLATION
 
+### Arch Linux
+
 Arch Linux users may install from the AUR: [interception-dual-function-keys](https://aur.archlinux.org/packages/interception-dual-function-keys).
 
-## BUILDING
+### From Source
 
 See [dependencies](https://gitlab.com/interception/linux/tools#dependencies).
+
+Install [Interception Tools](https://gitlab.com/interception/linux/tools) first.
 
 ``` sh
 git clone https://gitlab.com/interception/linux/plugins/dual-function-keys.git
@@ -80,7 +84,7 @@ Installation prefix defaults to `/usr/local`. This can be overridden in `config.
 
 There are two parts to be configured: dual-function-keys and udevmon, which launches dual-function-keys.
 
-See [examples](https://gitlab.com/interception/linux/plugins/dual-function-keys/-/tree/master/examples) which contains dual-function-keys and udevmon configurations.
+See [examples](https://gitlab.com/interception/linux/plugins/dual-function-keys/-/tree/master/doc/examples.md) which contains dual-function-keys, udevmon.yaml and udevmon.service configurations.
 
 ### dual-function-keys
 
@@ -176,7 +180,7 @@ Some common XKB usages that might be found in your X11 configuration:
 
 ## FAQ
 
-*I have a new use case. Can you support it?*
+### I have a new use case. Can you support it?
 
 Please raise an issue.
 
@@ -184,7 +188,7 @@ dual-function-keys has been built for my needs. I will be intrigued to hear your
 
 As usual, PRs are very welcome.
 
-*I see you are using q.m.k HHKB mod Keyboard in your udevmon. It uses [QMK Firmware](https://qmk.fm/). Why not just use [Tap-Hold](https://docs.qmk.fm/#/tap_hold)?*
+### I see you are using q.m.k HHKB mod Keyboard in your udevmon. It uses [QMK Firmware](https://qmk.fm/). Why not just use [Tap-Hold](https://docs.qmk.fm/#/tap_hold)?
 
 Good catch\! That does indeed provide the same functionality as dual-function-keys. Unfortunately there are some drawbacks:
 
@@ -192,9 +196,13 @@ Good catch\! That does indeed provide the same functionality as dual-function-ke
 2.  There are some issues with that functionality, as noted in the documentation [Tap-Hold](https://docs.qmk.fm/).
 3.  It requires a fast processor in the keyboard. My unscientific testing with an Ergodox (\~800 scans/sec) and HHKB (\~140) revealed that the slower keyboard is mushy and unuseably inaccurate.
 
-*Why not use [xcape](https://github.com/alols/xcape)?*
+### Why not use [xcape](https://github.com/alols/xcape)?
 
 Xcape only provides simple tap/hold functionality. It appears difficult (impossible?) to add the remaining functionality using its XTestFakeKeyEvent mechanisms.
+
+### My Key Combination Isn’t Working
+
+Ensure that your window manager is not intercepting that key combination.
 
 ## CONTRIBUTORS
 
