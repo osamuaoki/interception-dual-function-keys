@@ -207,6 +207,10 @@ Xcape only provides simple tap/hold functionality. It appears difficult (impossi
 
 Ensure that your window manager is not intercepting that key combination.
 
+### I Don't Want Double Tap Functionality
+
+Set DOUBLE_TAP_MILLISEC to 0. See [Key Combinations, No Double Tap](https://gitlab.com/interception/linux/plugins/dual-function-keys/-/blob/master/doc/examples.md#key-combinations-no-double-tap).
+
 ## CONTRIBUTORS
 
 Please fork this repo and submit a PR.

@@ -41,12 +41,12 @@ MAPPINGS:
     HOLD: KEY_RIGHTSHIFT
 ```
 
-# Key Combinations
+# Key Combinations, No Double Tap
 
 ```yaml
 TIMING:
   TAP_MILLISEC: 200
-  DOUBLE_TAP_MILLISEC: 150
+  DOUBLE_TAP_MILLISEC: 0
 
 MAPPINGS:
   # shifts tap ( ) like space cadet
