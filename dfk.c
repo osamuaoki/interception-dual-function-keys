@@ -40,6 +40,18 @@ tap(Mapping *m, unsigned int value) {
 }
 
 void
+hold(Mapping *m, unsigned int value) {
+    static struct input_event input = { .type = EV_KEY, };
+    Hold *h;
+
+    input.value = value;
+    for (h = m->hold; h; h = h->n) {
+        input.code = h->code;
+        write_event(&input);
+    }
+}
+
+void
 handle_press(Mapping *m, struct input_event *input) {
 
     // state
@@ -69,7 +81,7 @@ handle_press(Mapping *m, struct input_event *input) {
         case RELEASED:
         case PRESSED:
         case CONSUMED:
-            input->code = m->hold;
+            hold(m, INPUT_VAL_PRESS);
             write_event(input);
             break;
     }
@@ -101,7 +113,7 @@ handle_release(Mapping *m, struct input_event *input) {
     switch (m->state) {
         case TAPPED:
             // release
-            input->code = m->hold;
+            hold(m, INPUT_VAL_RELEASE);
             write_event(input);
 
             // synthesize tap
@@ -114,7 +126,7 @@ handle_release(Mapping *m, struct input_event *input) {
         case CONSUMED:
         case RELEASED:
         case PRESSED:
-            input->code = m->hold;
+            hold(m, INPUT_VAL_PRESS);
             write_event(input);
             break;
     }

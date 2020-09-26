@@ -102,7 +102,7 @@ TIMING:
 MAPPINGS:
     - KEY: <integer | string>
       TAP: [ <integer | string>, ... ]
-      HOLD: <integer | string>
+      HOLD: [ <integer | string>, ... ]
     - KEY: ...
 ```
 
@@ -126,6 +126,15 @@ MAPPINGS:
     - KEY: KEY_LEFTSHIFT
       TAP: [ KEY_LEFTSHIFT, KEY_9, ]
       HOLD: KEY_LEFTSHIFT
+```
+
+You can configure the `HOLD` as a “combo”, which will send multiple keys in order e.g. hyper modifier `(`:
+
+``` yaml
+MAPPINGS:
+    - KEY: TAB
+      TAP: TAB
+      HOLD: [ KEY_LEFTCTRL, KEY_LEFTMETA, KEY_LEFTALT, ] 
 ```
 
 ### udevmon

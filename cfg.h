@@ -21,9 +21,14 @@ typedef struct Tap {
     struct Tap *n;
 } Tap;
 
+typedef struct Hold {
+    int code;
+    struct Hold *n;
+} Hold;
+
 typedef struct Mapping {
     int key;
-    int hold;
+    Hold *hold;
     Tap *tap;
     State state;
     struct timeval changed;

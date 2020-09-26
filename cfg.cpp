@@ -26,7 +26,7 @@ event_code(const string code) {
 }
 
 void
-add_mapping(Cfg *cfg, const string key, Tap *tap, const string hold) {
+add_mapping(Cfg *cfg, const string key, Tap *tap, Hold *hold) {
     Mapping *m, *p;
 
     m = (Mapping*)calloc(1, sizeof(Mapping));
@@ -38,7 +38,7 @@ add_mapping(Cfg *cfg, const string key, Tap *tap, const string hold) {
     }
 
     m->key = event_code(key);
-    m->hold = event_code(hold);
+    m->hold = hold;
     m->tap = tap;
 }
 
@@ -63,6 +63,28 @@ build_tap(const YAML::Node &node) {
     }
 
     return tap;
+}
+Hold*
+build_hold(const YAML::Node &node) {
+    Hold *hold;
+    Hold *h, *p = 0;
+    size_t i;
+
+    if (node.IsSequence()) {
+        hold = (Hold*)calloc(node.size(), sizeof(Mapping));
+        for (i = 0; i < node.size(); i++) {
+            h = &hold[i];
+            h->code = event_code(node[i].as<string>());
+            if (p)
+                p->n = h;
+            p = h;
+        }
+    } else {
+        hold = (Hold*)calloc(node.size(), sizeof(Mapping));
+        hold->code = event_code(node.as<string>());
+    }
+
+    return hold;
 }
 
 } // namespace
@@ -92,10 +114,11 @@ read_cfg(Cfg *cfg, const char *path) {
         const auto &mappings = config["MAPPINGS"];
         for (const auto &mapping : mappings) {
             if (mapping["KEY"] && mapping["TAP"] && mapping["HOLD"]) {
-                add_mapping(cfg,
+                 add_mapping(cfg,
                         mapping["KEY"].as<string>(),
                         build_tap(mapping["TAP"]),
-                        mapping["HOLD"].as<string>());
+                        build_hold(mapping["HOLD"]));
+
             } else {
                 stringstream out;
                 out << mapping;

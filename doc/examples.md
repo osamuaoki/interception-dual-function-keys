@@ -64,6 +64,11 @@ MAPPINGS:
   - KEY: KEY_RIGHTALT
     TAP: [ KEY_LEFTSHIFT, KEY_DOT, ]
     HOLD: KEY_RIGHTALT
+
+  # tab to hyper modifier
+  - KEY: TAB
+    TAP: TAB
+    HOLD: [ KEY_LEFTCTRL, KEY_LEFTMETA, KEY_LEFTALT, ] 
 ```
 
 # Complete Example (Thanks @heymajor !)
