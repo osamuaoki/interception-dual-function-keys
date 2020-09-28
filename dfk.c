@@ -82,7 +82,6 @@ handle_press(Mapping *m, struct input_event *input) {
         case PRESSED:
         case CONSUMED:
             hold(m, INPUT_VAL_PRESS);
-            write_event(input);
             break;
     }
 }
@@ -114,7 +113,6 @@ handle_release(Mapping *m, struct input_event *input) {
         case TAPPED:
             // release
             hold(m, INPUT_VAL_RELEASE);
-            write_event(input);
 
             // synthesize tap
             tap(m, INPUT_VAL_PRESS);
@@ -126,8 +124,7 @@ handle_release(Mapping *m, struct input_event *input) {
         case CONSUMED:
         case RELEASED:
         case PRESSED:
-            hold(m, INPUT_VAL_PRESS);
-            write_event(input);
+            hold(m, INPUT_VAL_RELEASE);
             break;
     }
 }
