@@ -94,7 +94,8 @@ Wants=systemd-udev-settle.service
 After=systemd-udev-settle.service
 
 [Service]
-ExecStart=/usr/bin/nice -n -20 /usr/local/bin/udevmon -c /etc/udevmon.yaml
+ExecStart=/usr/local/bin/udevmon -c /etc/udevmon.yaml
+Nice=-20
 
 [Install]
 WantedBy=multi-user.target
