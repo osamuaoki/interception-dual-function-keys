@@ -1,4 +1,6 @@
-VERSION = 1.0.0
+ifndef VERSION
+  VERSION = "development-version"
+endif
 
 PREFIX = /usr/local
 
