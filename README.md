@@ -132,9 +132,22 @@ You can configure the `HOLD` as a “combo”, which will send multiple keys in 
 
 ``` yaml
 MAPPINGS:
-    - KEY: TAB
-      TAP: TAB
+    - KEY: KEY_TAB
+      TAP: KEY_TAB
       HOLD: [ KEY_LEFTCTRL, KEY_LEFTMETA, KEY_LEFTALT, ] 
+```
+
+Warning: do not assign the same modifier to two keys that you intend to press at the same time, as they will interfere with each other. Use left and right versions of the modifiers e.g. alt-tab with space-caps:
+
+``` yaml
+MAPPINGS:
+    - KEY: KEY_CAPSLOCK
+      TAP: KEY_TAB
+      HOLD: KEY_LEFTALT
+
+    - KEY: KEY_SPACE
+      TAP: KEY_SPACE
+      HOLD: KEY_RIGHTALT
 ```
 
 ### udevmon
