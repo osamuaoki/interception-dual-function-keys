@@ -28,7 +28,7 @@ Press and release LS within TAP\_MILLIS (default 200ms) for BS.
 
 Until the tap is complete, we get LS.
 
-```
+``` text
                 <---------200ms--------->     <---------200ms--------->
 keyboard:       LS↓      LS↑                  LS↓                          LS↑
 computer sees:  LS↓      LS↑ BS↓ BS↑          LS↓                          LS↑
@@ -38,7 +38,7 @@ computer sees:  LS↓      LS↑ BS↓ BS↑          LS↓                     
 
 Tap then press again with DOUBLE\_TAP\_MILLIS (default 150ms) to hold BS.
 
-```
+``` text
                              <-------150ms------->
                 <---------200ms--------->
 keyboard:       LS↓         LS↑             LS↓               LS↑
@@ -55,7 +55,7 @@ This is especially useful for modifiers, for instance a quick ctrl-C. In this ex
 
 Double taps do not apply after consumption; you will need to tap first.
 
-```
+``` text
                                                                <-------150ms------->
                                                  <---------200ms--------->
                                  <-------150ms------->
@@ -132,13 +132,26 @@ MAPPINGS:
       HOLD: KEY_LEFTSHIFT
 ```
 
-You can configure the `HOLD` as a “combo”, which will send multiple keys in order e.g. hyper modifier `(`:
+You can configure the `HOLD` as a “combo”, which will send multiple keys in order e.g. hyper modifier:
 
 ``` YAML
 MAPPINGS:
-    - KEY: TAB
-      TAP: TAB
+    - KEY: KEY_TAB
+      TAP: KEY_TAB
       HOLD: [ KEY_LEFTCTRL, KEY_LEFTMETA, KEY_LEFTALT, ] 
+```
+
+Warning: do not assign the same modifier to two keys that you intend to press at the same time, as they will interfere with each other. Use left and right versions of the modifiers e.g. alt-tab with space-caps:
+
+``` yaml
+MAPPINGS:
+    - KEY: KEY_CAPSLOCK
+      TAP: KEY_TAB
+      HOLD: KEY_LEFTALT
+
+    - KEY: KEY_SPACE
+      TAP: KEY_SPACE
+      HOLD: KEY_RIGHTALT
 ```
 
 ### udevmon
@@ -183,7 +196,7 @@ As always, there is a caveat: dual-function-keys operates on raw *keycodes*, not
 If you have anything modifying the keycode-\>keysym mapping, such as [XKB](https://www.x.org/wiki/XKB/) or [xmodmap](https://wiki.archlinux.org/index.php/Xmodmap), be mindful that dual-function-keys operates before them.
 
 Some common XKB usages that might be found in your X11 configuration:
-```
+``` text
     Option "XkbModel" "pc105"
     Option "XKbLayout" "us"
     Option "XkbVariant" "dvp"
