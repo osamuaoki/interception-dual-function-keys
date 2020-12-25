@@ -1,6 +1,6 @@
 % DUAL-FUNCTION-KEYS(1) Dual Function Keys | User Manuals
 % Alexander Courtis
-% 2020/05/03
+% 2020/12/25
 
 ## NAME
 
@@ -20,29 +20,29 @@ A plugin for [interception tools](https://gitlab.com/interception/linux).
 
 In these examples we will use the left shift key (LS).
 
-It is configured to tap for backspace (BS) and hold for LS.
+It is configured to tap for delete (DE) and hold for LS.
 
 ### Tap
 
-Press and release LS within TAP\_MILLIS (default 200ms) for BS.
+Press and release LS within TAP\_MILLIS (default 200ms) for DE.
 
 Until the tap is complete, we get LS.
 
 ``` text
                 <---------200ms--------->     <---------200ms--------->
 keyboard:       LS↓      LS↑                  LS↓                          LS↑
-computer sees:  LS↓      LS↑ BS↓ BS↑          LS↓                          LS↑
+computer sees:  LS↓      LS↑ DE↓ DE↑          LS↓                          LS↑
 ```
 
 ### Double Tap
 
-Tap then press again with DOUBLE\_TAP\_MILLIS (default 150ms) to hold BS.
+Tap then press again with DOUBLE\_TAP\_MILLIS (default 150ms) to hold DE.
 
 ``` text
                              <-------150ms------->
                 <---------200ms--------->
 keyboard:       LS↓         LS↑             LS↓               LS↑
-computer sees:  LS↓         LS↑ BS↓ BS↑     BS↓ ..(repeats).. BS↑
+computer sees:  LS↓         LS↑ DE↓ DE↑     DE↓ ..(repeats).. DE↑
 ```
 
 You can continue double tapping so long as it is within the DOUBLE\_TAP\_MILLIS window.
@@ -61,7 +61,7 @@ Double taps do not apply after consumption; you will need to tap first.
                                  <-------150ms------->
                 <---------200ms--------->
 keyboard:       LS↓   a↓  a↑     LS↑             LS↓          LS↑           LS↓
-computer sees:  LS↓              LS↑             LS↓          LS↑ BS↓ BS↑   BS↓ ..(repeats)..
+computer sees:  LS↓              LS↑             LS↓          LS↑ DE↓ DE↑   DE↓ ..(repeats)..
 ```
 
 ## INSTALLATION

@@ -16,29 +16,29 @@ A plugin for [interception tools](https://gitlab.com/interception/linux).
 
 In these examples we will use the left shift key (LS).
 
-It is configured to tap for backspace (BS) and hold for LS.
+It is configured to tap for delete (DE) and hold for LS.
 
 ### Tap
 
-Press and release LS within TAP\_MILLIS (default 200ms) for BS.
+Press and release LS within TAP\_MILLIS (default 200ms) for DE.
 
 Until the tap is complete, we get LS.
 
 ``` text
                 <---------200ms--------->     <---------200ms--------->
 keyboard:       LS↓      LS↑                  LS↓                          LS↑
-computer sees:  LS↓      LS↑ BS↓ BS↑          LS↓                          LS↑
+computer sees:  LS↓      LS↑ DE↓ DE↑          LS↓                          LS↑
 ```
 
 ### Double Tap
 
-Tap then press again with DOUBLE\_TAP\_MILLIS (default 150ms) to hold BS.
+Tap then press again with DOUBLE\_TAP\_MILLIS (default 150ms) to hold DE.
 
 ``` text
                              <-------150ms------->
                 <---------200ms--------->
 keyboard:       LS↓         LS↑             LS↓               LS↑
-computer sees:  LS↓         LS↑ BS↓ BS↑     BS↓ ..(repeats).. BS↑
+computer sees:  LS↓         LS↑ DE↓ DE↑     DE↓ ..(repeats).. DE↑
 ```
 
 You can continue double tapping so long as it is within the DOUBLE\_TAP\_MILLIS window.
@@ -57,7 +57,7 @@ Double taps do not apply after consumption; you will need to tap first.
                                  <-------150ms------->
                 <---------200ms--------->
 keyboard:       LS↓   a↓  a↑     LS↑             LS↓          LS↑           LS↓
-computer sees:  LS↓              LS↑             LS↓          LS↑ BS↓ BS↑   BS↓ ..(repeats)..
+computer sees:  LS↓              LS↑             LS↓          LS↑ DE↓ DE↑   DE↓ ..(repeats)..
 ```
 
 ## INSTALLATION
@@ -212,11 +212,11 @@ As usual, PRs are very welcome.
 
 ### I see you are using q.m.k HHKB mod Keyboard in your udevmon. It uses [QMK Firmware](https://qmk.fm/). Why not just use [Tap-Hold](https://docs.qmk.fm/#/tap_hold)?
 
-Good catch\! That does indeed provide the same functionality as dual-function-keys. Unfortunately there are some drawbacks:
+Good catch! That does indeed provide the same functionality as dual-function-keys. Unfortunately there are some drawbacks:
 
 1.  Few keyboards run QMK Firmware.
 2.  There are some issues with that functionality, as noted in the documentation [Tap-Hold](https://docs.qmk.fm/).
-3.  It requires a fast processor in the keyboard. My unscientific testing with an Ergodox (\~800 scans/sec) and HHKB (\~140) revealed that the slower keyboard is mushy and unuseably inaccurate.
+3.  It requires a fast processor in the keyboard. My unscientific testing with an Ergodox (~800 scans/sec) and HHKB (~140) revealed that the slower keyboard is mushy and unuseably inaccurate.
 
 ### Why not use [xcape](https://github.com/alols/xcape)?
 
