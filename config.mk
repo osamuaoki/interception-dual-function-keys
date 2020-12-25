@@ -6,7 +6,7 @@ PREFIX = /usr/local
 
 INCS = -I/usr/include/libevdev-1.0
 
-CPPFLAGS = $(INCS) -DVERSION=\"$(VERSION)\"
+CPPFLAGS = $(INCS) -D_POSIX_C_SOURCE=200809L -DVERSION=\"$(VERSION)\"
 
 COMPFLAGS = -pedantic -Wall -Wextra -O3
 CFLAGS = $(COMPFLAGS) -std=c99

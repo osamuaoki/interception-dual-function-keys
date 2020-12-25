@@ -30,7 +30,7 @@ uninstall:
 
 # https://github.com/alex-courtis/arch/blob/b530f331dacaaba27484593a87ca20a9f53ab73f/home/bin/ctags-something
 ctags:
-	ctags-c $(CPPFLAGS) $(HDR) $(CSRC) $(CXXSRC)
+	ctags-c $(CPPFLAGS) --project-src $(HDR) $(CSRC) $(CXXSRC)
 
 # dual-function-keys.md is pandoc flavoured markdown; please edit that and commit all 3 files
 doc: dual-function-keys.md
