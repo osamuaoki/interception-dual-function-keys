@@ -13,7 +13,7 @@
 #define INPUT_VAL_RELEASE 0
 #define INPUT_VAL_REPEAT 2
 
-#define PAUSE_NS 1e6
+#define PAUSE_NS 20000000
 
 static Cfg cfg;
 
