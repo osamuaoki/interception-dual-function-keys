@@ -64,7 +64,7 @@ computer sees:  LS↓              LS↑             LS↓          LS↑ DE↓ 
 
 ### Arch Linux
 
-Arch Linux users may install from the AUR: [interception-dual-function-keys](https://aur.archlinux.org/packages/interception-dual-function-keys).
+Arch Linux users may install from the Arch community package repository: [interception-dual-function-keys](https://archlinux.org/packages/community/x86_64/interception-dual-function-keys/).
 
 ### From Source
 
