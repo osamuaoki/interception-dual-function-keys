@@ -86,21 +86,6 @@ MAPPINGS:
 
 Laptop sometimes used with a wireless keyboard. Config for wired keyboard came out of troubleshooting overall setup.
 
-## /etc/systemd/system/udevmon.service
-```
-[Unit]
-Description=udevmon
-Wants=systemd-udev-settle.service
-After=systemd-udev-settle.service
-
-[Service]
-ExecStart=/usr/local/bin/udevmon -c /etc/udevmon.yaml
-Nice=-20
-
-[Install]
-WantedBy=multi-user.target
-```
-
 ## /etc/udevmon.yaml
 ```yaml
 - JOB: "intercept -g $DEVNODE | dual-function-keys -c /etc/dual-function-keys-logitech.yaml | uinput -d $DEVNODE"
