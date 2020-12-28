@@ -89,7 +89,7 @@ This can be overridden in \f[C]config.mk\f[R].
 .PP
 There are two parts to be configured: dual-function-keys and udevmon, which launches dual-function-keys.
 .PP
-See examples (https://gitlab.com/interception/linux/plugins/dual-function-keys/-/tree/master/doc/examples.md) which contains dual-function-keys, udevmon.yaml and udevmon.service configurations.
+See examples (https://gitlab.com/interception/linux/plugins/dual-function-keys/-/tree/master/doc/examples.md) which contains dual-function-keys and udevmon.yaml configurations.
 .SS dual-function-keys
 .PP
 This yaml file can go anywhere.
@@ -102,6 +102,7 @@ You can use raw (integer) keycodes, however it is easier to use the \f[C]#define
 TIMING:
     TAP_MILLISEC: <integer>
     DOUBLE_TAP_MILLISEC: <integer>
+    SYNTHETIC_KEYS_PAUSE_MILLISEC: <integer>
 
 # necessary
 MAPPINGS:
@@ -146,6 +147,16 @@ MAPPINGS:
     - KEY: KEY_TAB
       TAP: KEY_TAB
       HOLD: [ KEY_LEFTCTRL, KEY_LEFTMETA, KEY_LEFTALT, ] 
+\f[R]
+.fi
+.PP
+By default, there will be a pause of 20ms between keys in the \[lq]combo\[rq].
+This may be changed:
+.IP
+.nf
+\f[C]
+TIMING:
+    SYNTHETIC_KEYS_PAUSE_MILLISEC: 10
 \f[R]
 .fi
 .PP

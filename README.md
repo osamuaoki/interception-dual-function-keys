@@ -84,7 +84,7 @@ Installation prefix defaults to `/usr/local`. This can be overridden in `config.
 
 There are two parts to be configured: dual-function-keys and udevmon, which launches dual-function-keys.
 
-See [examples](https://gitlab.com/interception/linux/plugins/dual-function-keys/-/tree/master/doc/examples.md) which contains dual-function-keys, udevmon.yaml and udevmon.service configurations.
+See [examples](https://gitlab.com/interception/linux/plugins/dual-function-keys/-/tree/master/doc/examples.md) which contains dual-function-keys and udevmon.yaml configurations.
 
 ### dual-function-keys
 
@@ -97,6 +97,7 @@ You can use raw (integer) keycodes, however it is easier to use the `#define`d s
 TIMING:
     TAP_MILLISEC: <integer>
     DOUBLE_TAP_MILLISEC: <integer>
+    SYNTHETIC_KEYS_PAUSE_MILLISEC: <integer>
 
 # necessary
 MAPPINGS:
@@ -135,6 +136,13 @@ MAPPINGS:
     - KEY: KEY_TAB
       TAP: KEY_TAB
       HOLD: [ KEY_LEFTCTRL, KEY_LEFTMETA, KEY_LEFTALT, ] 
+```
+
+By default, there will be a pause of 20ms between keys in the “combo”. This may be changed:
+
+``` yaml
+TIMING:
+    SYNTHETIC_KEYS_PAUSE_MILLISEC: 10
 ```
 
 Warning: do not assign the same modifier to two keys that you intend to press at the same time, as they will interfere with each other. Use left and right versions of the modifiers e.g. alt-tab with space-caps:

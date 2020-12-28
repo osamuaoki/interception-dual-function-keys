@@ -2,9 +2,8 @@
 #include <getopt.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <unistd.h>
+#include <time.h>
 #include <linux/input.h>
-#include <sys/time.h>
 
 #define DUR_MILLIS(start, end) \
     ((end.tv_sec - start.tv_sec) * 1000 + (end.tv_usec - start.tv_usec) / 1000)
@@ -28,6 +27,21 @@ write_event(const struct input_event *event) {
 }
 
 void
+syn_pause() {
+    static const struct input_event syn = {
+        .type = EV_SYN,
+        .code = SYN_REPORT,
+        .value = 0,
+    };
+    static struct timespec p = { .tv_sec = 0, .tv_nsec = 0 };
+    if (!p.tv_nsec)
+            p.tv_nsec = cfg.synthetic_keys_pause_millis * 1e6;
+
+    write_event(&syn);
+    nanosleep(&p, &p);
+}
+
+void
 tap(Mapping *m, unsigned int value) {
     static struct input_event input = { .type = EV_KEY, };
     Tap *t;
@@ -36,6 +50,8 @@ tap(Mapping *m, unsigned int value) {
     for (t = m->tap; t; t = t->n) {
         input.code = t->code;
         write_event(&input);
+        if (t->n)
+            syn_pause();
     }
 }
 
@@ -48,6 +64,8 @@ hold(Mapping *m, unsigned int value) {
     for (h = m->hold; h; h = h->n) {
         input.code = h->code;
         write_event(&input);
+        if (h->n)
+            syn_pause();
     }
 }
 
@@ -113,9 +131,11 @@ handle_release(Mapping *m, struct input_event *input) {
         case TAPPED:
             // release
             hold(m, INPUT_VAL_RELEASE);
+            syn_pause();
 
             // synthesize tap
             tap(m, INPUT_VAL_PRESS);
+            syn_pause();
             tap(m, INPUT_VAL_RELEASE);
             break;
         case DOUBLETAPPED:
@@ -153,11 +173,10 @@ loop() {
     Mapping *m;
 
     while (read_event(&input)) {
-        // uinput doesn't need sync events
         if (input.type == EV_MSC && input.code == MSC_SCAN)
             continue;
 
-        // forward anything that is not a key event
+        // forward anything that is not a key event, including SYNs
         if (input.type != EV_KEY) {
             write_event(&input);
             continue;
