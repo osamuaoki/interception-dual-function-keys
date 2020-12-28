@@ -84,7 +84,7 @@ Installation prefix defaults to `/usr/local`. This can be overridden in `config.
 
 There are two parts to be configured: dual-function-keys and udevmon, which launches dual-function-keys.
 
-See [examples](https://gitlab.com/interception/linux/plugins/dual-function-keys/-/tree/master/doc/examples.md) which contains dual-function-keys, udevmon.yaml and udevmon.service configurations.
+See [examples](https://gitlab.com/interception/linux/plugins/dual-function-keys/-/tree/master/doc/examples.md) which contains dual-function-keys and udevmon.yaml configurations.
 
 ### dual-function-keys
 
