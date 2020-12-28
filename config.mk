@@ -8,7 +8,7 @@ CPPFLAGS += $(INCS) -DVERSION=\"$(VERSION)\"
 
 COMPFLAGS += -pedantic -Wall -Wextra -O3
 CFLAGS += $(COMPFLAGS) -std=c99
-CXXFLAGS = $(COMPFLAGS) -std=c++11
+CXXFLAGS += $(COMPFLAGS) -std=c++11
 
 LDFLAGS += -rdynamic -lyaml-cpp -levdev
 
