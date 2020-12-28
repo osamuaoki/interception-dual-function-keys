@@ -3,6 +3,7 @@
 
 #define DEFAULT_TAP_MILLIS 200
 #define DEFAULT_DOUBLE_TAP_MILLIS 150
+#define DEFAULT_SYNTHETIC_KEYS_PAUSE_MILLIS 20
 
 #ifdef __cplusplus
 extern "C" { //}
@@ -38,6 +39,7 @@ typedef struct Mapping {
 typedef struct Cfg {
     int tap_millis;
     int double_tap_millis;
+    int synthetic_keys_pause_millis;
     Mapping *m;
 } Cfg;
 

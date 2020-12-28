@@ -13,8 +13,6 @@
 #define INPUT_VAL_RELEASE 0
 #define INPUT_VAL_REPEAT 2
 
-#define PAUSE_NS 20000000
-
 static Cfg cfg;
 
 int
@@ -35,7 +33,9 @@ syn_pause() {
         .code = SYN_REPORT,
         .value = 0,
     };
-    static struct timespec p = { .tv_sec = 0, .tv_nsec = PAUSE_NS };
+    static struct timespec p = { .tv_sec = 0, .tv_nsec = 0 };
+    if (!p.tv_nsec)
+            p.tv_nsec = cfg.synthetic_keys_pause_millis * 1e6;
 
     write_event(&syn);
     nanosleep(&p, &p);

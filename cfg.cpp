@@ -110,6 +110,10 @@ read_cfg(Cfg *cfg, const char *path) {
             cfg->double_tap_millis = timing["DOUBLE_TAP_MILLISEC"].as<int>();
         else
             cfg->double_tap_millis = DEFAULT_DOUBLE_TAP_MILLIS;
+        if (timing["SYNTHETIC_KEYS_PAUSE_MILLISEC"])
+            cfg->synthetic_keys_pause_millis = timing["SYNTHETIC_KEYS_PAUSE_MILLISEC"].as<int>();
+        else
+            cfg->synthetic_keys_pause_millis = DEFAULT_SYNTHETIC_KEYS_PAUSE_MILLIS;
 
         const auto &mappings = config["MAPPINGS"];
         for (const auto &mapping : mappings) {
