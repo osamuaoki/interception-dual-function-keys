@@ -87,28 +87,28 @@ MAPPINGS:
 
 Laptop sometimes used with a wireless keyboard. Config for wired keyboard came out of troubleshooting overall setup.
 
-## /etc/udevmon.yaml
+## /etc/interception/udevmon.yaml
 ```yaml
-- JOB: "intercept -g $DEVNODE | dual-function-keys -c /etc/dual-function-keys-logitech.yaml | uinput -d $DEVNODE"
+- JOB: "intercept -g $DEVNODE | dual-function-keys -c /etc/interception/dual-function-keys/logitech.yaml | uinput -d $DEVNODE"
   DEVICE:
     NAME: "Logitech Wireless Keyboard PID:4023"
     EVENTS:
       EV_KEY: [KEY_CAPSLOCK, KEY_ENTER, KEY_LEFTSHIFT, KEY_RIGHTSHIFT, KEY_LEFTCTRL, KEY_RIGHTCTRL]
 
-- JOB: "intercept -g $DEVNODE | dual-function-keys -c /etc/dual-function-keys-lenovo.yaml | uinput -d $DEVNODE"
+- JOB: "intercept -g $DEVNODE | dual-function-keys -c /etc/interception/dual-function-keys/lenovo.yaml | uinput -d $DEVNODE"
   DEVICE:
     NAME: "AT Translated Set 2 keyboard"
     EVENTS:
       EV_KEY: [KEY_CAPSLOCK, KEY_ENTER, KEY_LEFTSHIFT, KEY_RIGHTSHIFT, KEY_LEFTCTRL, KEY_RIGHTCTRL]
 
-- JOB: "intercept -g $DEVNODE | dual-function-keys -c /etc/dual-function-keys-dock.yaml | uinput -d $DEVNODE"
+- JOB: "intercept -g $DEVNODE | dual-function-keys -c /etc/interception/dual-function-keys/dock.yaml | uinput -d $DEVNODE"
   DEVICE:
     NAME: "CHICONY USB Keyboard"
     EVENTS:
       EV_KEY: [KEY_CAPSLOCK, KEY_ENTER, KEY_LEFTSHIFT, KEY_RIGHTSHIFT, KEY_LEFTCTRL, KEY_RIGHTCTRL]
 ```
 
-## /etc/dual-function-keys-lenovo.yaml
+## /etc/interception/dual-function-keys/lenovo.yaml
 ```yaml
 TIMING:
   TAP_MILLISEC: 200
@@ -135,7 +135,7 @@ MAPPINGS:
     HOLD: KEY_RIGHTCTRL
 ```
 
-## /etc/dual-function-keys-logitech.yaml
+## /etc/interception/dual-function-keys/logitech.yaml
 ```yaml
 TIMING:
   TAP_MILLISEC: 200
@@ -162,7 +162,7 @@ MAPPINGS:
     HOLD: KEY_RIGHTCTRL
 ```
 
-## /etc/dual-function-keys-dock.yaml
+## /etc/interception/dual-function-keys/dock.yaml
 ```yaml
 TIMING:
   TAP_MILLISEC: 200

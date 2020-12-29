@@ -184,13 +184,13 @@ See [Interception Tools: How It Works](https://gitlab.com/interception/linux/too
 
 Usually the name is sufficient to uniquely identify the keyboard, however some keyboards register many devices such as a virtal mouse. You can run dual-function-keys for all the devices, however I prefer to run it only for the actual keyboard.
 
-My `/etc/udevmon.yml`:
+My `/etc/interception/udevmon.yml`:
 
 ``` yaml
-- JOB: "intercept -g $DEVNODE | dual-function-keys -c /etc/dfk.home-row-modifiers.yaml | uinput -d $DEVNODE"
+- JOB: "intercept -g $DEVNODE | dual-function-keys -c /etc/interception/dual-function-keys/home-row-modifiers.yaml | uinput -d $DEVNODE"
   DEVICE:
     NAME: "q.m.k HHKB mod Keyboard"
-- JOB: "intercept -g $DEVNODE | dual-function-keys -c /etc/dfk.kinesis-advantage-2.yaml | uinput -d $DEVNODE"
+- JOB: "intercept -g $DEVNODE | dual-function-keys -c /etc/interception/dual-function-keys/thumb-cluster.yaml | uinput -d $DEVNODE"
   DEVICE:
     NAME: "Kinesis Advantage2 Keyboard"
     EVENTS:
