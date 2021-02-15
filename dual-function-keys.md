@@ -124,7 +124,7 @@ MAPPINGS:
       HOLD: KEY_LEFTSHIFT
 ```
 
-You can configure the `TAP` as a "combo", which will send multiple keys in order e.g. space cadet `(`:
+You can configure the `TAP` as a "combo", which will press then release multiple keys in order e.g. space cadet `(`:
 
 ```YAML
 MAPPINGS:
@@ -133,7 +133,7 @@ MAPPINGS:
       HOLD: KEY_LEFTSHIFT
 ```
 
-You can configure the `HOLD` as a “combo”, which will send multiple keys in order e.g. hyper modifier:
+You can configure the `HOLD` as a “combo”, which will press then release multiple keys in order e.g. hyper modifier:
 
 ``` YAML
 MAPPINGS:
