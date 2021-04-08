@@ -99,13 +99,16 @@ handle_press(Mapping *m, struct input_event *input) {
         case RELEASED:
         case PRESSED:
         case CONSUMED:
-            hold(m, INPUT_VAL_PRESS);
+            if (m->hold_start == AFTER_PRESS)
+                hold(m, INPUT_VAL_PRESS);
             break;
     }
 }
 
 void
 handle_release(Mapping *m, struct input_event *input) {
+
+    int already_pressed = m->hold_start == AFTER_PRESS;
 
     // state
     switch (m->state) {
@@ -119,6 +122,7 @@ handle_release(Mapping *m, struct input_event *input) {
         case DOUBLETAPPED:
             break;
         case CONSUMED:
+            already_pressed = 1;
             m->state = RELEASED;
             break;
         case RELEASED:
@@ -130,8 +134,10 @@ handle_release(Mapping *m, struct input_event *input) {
     switch (m->state) {
         case TAPPED:
             // release
-            hold(m, INPUT_VAL_RELEASE);
-            syn_pause();
+            if (already_pressed) {
+                hold(m, INPUT_VAL_RELEASE);
+                syn_pause();
+            }
 
             // synthesize tap
             tap(m, INPUT_VAL_PRESS);
@@ -144,16 +150,37 @@ handle_release(Mapping *m, struct input_event *input) {
         case CONSUMED:
         case RELEASED:
         case PRESSED:
-            hold(m, INPUT_VAL_RELEASE);
+            if (m->hold_start == BEFORE_CONSUME_OR_RELEASE && !already_pressed) {
+                hold(m, INPUT_VAL_PRESS);
+                syn_pause();
+                already_pressed = 1;
+            }
+
+            if (already_pressed)
+                hold(m, INPUT_VAL_RELEASE);
             break;
     }
 }
 
 void
 consume_pressed() {
-
-    // state
     for (Mapping *m = cfg.m; m; m = m->n) {
+        // action
+        switch (m->state) {
+            case PRESSED:
+                if (m->hold_start != AFTER_PRESS) {
+                    hold(m, INPUT_VAL_PRESS);
+                    syn_pause();
+                }
+                break;
+            case TAPPED:
+            case DOUBLETAPPED:
+            case RELEASED:
+            case CONSUMED:
+                break;
+        }
+
+        // state
         switch (m->state) {
             case PRESSED:
                 m->state = CONSUMED;

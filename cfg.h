@@ -27,10 +27,17 @@ typedef struct Hold {
     struct Hold *n;
 } Hold;
 
+typedef enum HoldStart {
+    AFTER_PRESS,
+    BEFORE_CONSUME,
+    BEFORE_CONSUME_OR_RELEASE,
+} HoldStart;
+
 typedef struct Mapping {
     int key;
     Hold *hold;
     Tap *tap;
+    HoldStart hold_start;
     State state;
     struct timeval changed;
     struct Mapping *n;
