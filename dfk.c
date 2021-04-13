@@ -203,6 +203,10 @@ loop() {
         if (input.type == EV_MSC && input.code == MSC_SCAN)
             continue;
 
+        // make mouse and touchpad events consume pressed taps
+        if (input.type == EV_REL || input.type == EV_ABS)
+            consume_pressed();
+
         // forward anything that is not a key event, including SYNs
         if (input.type != EV_KEY) {
             write_event(&input);
