@@ -22,7 +22,7 @@ It is configured to tap for delete (DE) and hold for LS.
 
 Press and release LS within TAP\_MILLIS (default 200ms) for DE.
 
-Until the tap is complete, we get LS.
+By default, until the tap is complete, we get LS. See [below](#changing-the-behavior-of-hold-keys) for other options.
 
 ``` text
                 <---------200ms--------->     <---------200ms--------->
@@ -56,9 +56,11 @@ Double taps do not apply after consumption; you will need to tap first.
                                                  <---------200ms--------->
                                  <-------150ms------->
                 <---------200ms--------->
-keyboard:       LS↓   a↓  a↑     LS↑             LS↓          LS↑           LS↓
-computer sees:  LS↓              LS↑             LS↓          LS↑ DE↓ DE↑   DE↓ ..(repeats)..
+keyboard:       LS↓      a↓  a↑  LS↑             LS↓          LS↑           LS↓
+computer sees:  LS↓      a↓  a↑  LS↑             LS↓          LS↑ DE↓ DE↑   DE↓ ..(repeats)..
 ```
+
+Note: mouse and touchpad events (`EV_REL` and `EV_ABS`) can also consume taps.
 
 ## INSTALLATION
 
@@ -104,6 +106,8 @@ MAPPINGS:
     - KEY: <integer | string>
       TAP: [ <integer | string>, ... ]
       HOLD: [ <integer | string>, ... ]
+      # optional
+      HOLD_START: [ AFTER_PRESS | BEFORE_CONSUME | BEFORE_CONSUME_OR_RELEASE ]
     - KEY: ...
 ```
 
@@ -119,6 +123,8 @@ MAPPINGS:
       TAP: KEY_DELETE
       HOLD: KEY_LEFTSHIFT
 ```
+
+#### Combo Keys
 
 You can configure the `TAP` as a “combo”, which will press then release multiple keys in order e.g. space cadet `(`:
 
@@ -145,7 +151,40 @@ TIMING:
     SYNTHETIC_KEYS_PAUSE_MILLISEC: 10
 ```
 
-Warning: do not assign the same modifier to two keys that you intend to press at the same time, as they will interfere with each other. Use left and right versions of the modifiers e.g. alt-tab with space-caps:
+#### Changing the Behavior of `HOLD` Keys
+
+Additionally, you can use `HOLD_START` to configure the behavior of `HOLD` keys. The examples [above](#functionality) will be used again here.
+
+-   If `HOLD_START` is unspecified, `AFTER_PRESS` or an unrecognized value, `HOLD` keys are pressed after `KEY` is pressed, and released when `KEY` is released. This this the default behavior used in examples [above](#functionality).
+
+-   If `HOLD_START` is `BEFORE_CONSUME`, `HOLD` keys are pressed before `KEY` is consumed, and released when `KEY` is released. Therefore no extra keys beside `TAP` keys are sent when `KEY` is tapped, while `HOLD` keys can still be used as modifiers.
+
+``` text
+                <---------200ms--------->     <---------200ms--------->
+keyboard:       LS↓      LS↑                  LS↓                          LS↑
+computer sees:           DE↓ DE↑
+```
+
+``` text
+                                                               <-------150ms------->
+                                                 <---------200ms--------->
+                                 <-------150ms------->
+                <---------200ms--------->
+keyboard:       LS↓      a↓  a↑   LS↑             LS↓          LS↑           LS↓
+computer sees:       LS↓ a↓  a↑   LS↑                          DE↓ DE↑       DE↓ ..(repeats)..
+```
+
+-   If `HOLD_START` is `BEFORE_CONSUME_OR_RELEASE`, the behavior is like `BEFORE_CONSUME` except that when `KEY` is released and is neither tapped nor consumed before, `HOLD` keys are pressed in order and then released in order.
+
+``` text
+                <---------200ms--------->     <---------200ms--------->
+keyboard:       LS↓      LS↑                  LS↓                          LS↑
+computer sees:           DE↓ DE↑                                           LS↓ LS↑
+```
+
+#### Warning
+
+Do not assign the same modifier to two keys that you intend to press at the same time, as they will interfere with each other. Use left and right versions of the modifiers e.g. alt-tab with space-caps:
 
 ``` yaml
 MAPPINGS:
