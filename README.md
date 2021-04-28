@@ -70,7 +70,7 @@ Arch Linux users may install from the Arch community package repository: [interc
 
 ### From Source
 
-See [dependencies](https://gitlab.com/interception/linux/tools#dependencies).
+See [runtime dependencies](https://gitlab.com/interception/linux/tools#runtime-dependencies).
 
 Install [Interception Tools](https://gitlab.com/interception/linux/tools) first.
 
@@ -195,6 +195,21 @@ MAPPINGS:
     - KEY: KEY_SPACE
       TAP: KEY_SPACE
       HOLD: KEY_RIGHTALT
+```
+
+Alternatively, you can use `HOLD_START: BEFORE_CONSUME` or `HOLD_START: BEFORE_CONSUME_OR_RELEASE` and then assigning the same modifier will be fine:
+
+``` yaml
+MAPPINGS:
+    - KEY: KEY_CAPSLOCK
+      TAP: KEY_TAB
+      HOLD: KEY_LEFTALT
+      HOLD_START: BEFORE_CONSUME_OR_RELEASE
+
+    - KEY: KEY_SPACE
+      TAP: KEY_SPACE
+      HOLD: KEY_LEFTALT
+      HOLD_START: BEFORE_CONSUME_OR_RELEASE
 ```
 
 ### udevmon
