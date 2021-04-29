@@ -74,7 +74,7 @@ Note: mouse and touchpad events (\f[C]EV_REL\f[R] and \f[C]EV_ABS\f[R]) can also
 Arch Linux users may install from the Arch community package repository: interception-dual-function-keys (https://archlinux.org/packages/community/x86_64/interception-dual-function-keys/).
 .SS From Source
 .PP
-See dependencies (https://gitlab.com/interception/linux/tools#dependencies).
+See runtime dependencies (https://gitlab.com/interception/linux/tools#runtime-dependencies).
 .PP
 Install Interception Tools (https://gitlab.com/interception/linux/tools) first.
 .IP
@@ -219,6 +219,23 @@ MAPPINGS:
     - KEY: KEY_SPACE
       TAP: KEY_SPACE
       HOLD: KEY_RIGHTALT
+\f[R]
+.fi
+.PP
+Alternatively, you can use \f[C]HOLD_START: BEFORE_CONSUME\f[R] or \f[C]HOLD_START: BEFORE_CONSUME_OR_RELEASE\f[R] and then assigning the same modifier will be fine:
+.IP
+.nf
+\f[C]
+MAPPINGS:
+    - KEY: KEY_CAPSLOCK
+      TAP: KEY_TAB
+      HOLD: KEY_LEFTALT
+      HOLD_START: BEFORE_CONSUME_OR_RELEASE
+
+    - KEY: KEY_SPACE
+      TAP: KEY_SPACE
+      HOLD: KEY_LEFTALT
+      HOLD_START: BEFORE_CONSUME_OR_RELEASE
 \f[R]
 .fi
 .SS udevmon
