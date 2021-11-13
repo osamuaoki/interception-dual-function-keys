@@ -18,9 +18,10 @@ A plugin for [interception tools](https://gitlab.com/interception/linux).
 
 ## QUICK START
 
-1. Define some mappings `/etc/interception/dual-function-keys/my-mappings.yaml`. There are many [examples](https://gitlab.com/interception/linux/plugins/dual-function-keys/-/tree/master/doc/examples.md)
+1. Create some mappings `/etc/interception/dual-function-keys/my-mappings.yaml`. There are many [examples](https://gitlab.com/interception/linux/plugins/dual-function-keys/-/tree/master/doc/examples.md)
 1. Create your [interception tools](https://gitlab.com/interception/linux) udevmon configuration: `/etc/interception/udevmon.d/my-keyboards.yaml`. You can use [my configuration](#udevmon) to get started.
-1. Restart udevmon: `sudo systemctl restart udevmon`
+1. Enable udevmon: `sudo systemctl enable udevmon`
+1. (Re)start udevmon: `sudo systemctl restart udevmon`
 1. Check for problems: `journalctl -u udevmon`. No news is good news. You can safely disregard any `ignoring /etc/interception/udevmon.yaml, reason: bad file: /etc/interception/udevmon.yaml` messages.
 
 ## FUNCTIONALITY
@@ -29,9 +30,15 @@ In these examples we will use the left shift key (LS).
 
 It is configured to tap for delete (DE) and hold for LS.
 
+```yaml
+  - KEY: KEY_LEFTSHIFT
+    TAP: KEY_DELETE
+    HOLD: KEY_LEFTSHIFT
+```
+
 ### Tap
 
-Press and release LS within TAP\_MILLIS (default 200ms) for DE.
+Press and release LS within `TAP_MILLIS` (default 200ms) for DE.
 
 By default, until the tap is complete, we get LS. See [below](#changing-the-behavior-of-hold-keys) for other options.
 
@@ -43,7 +50,7 @@ computer sees:  LS↓      LS↑ DE↓ DE↑          LS↓                     
 
 ### Double Tap
 
-Tap then press again with DOUBLE\_TAP\_MILLIS (default 150ms) to hold DE.
+Tap then press again with `DOUBLE_TAP_MILLIS` (default 150ms) to hold DE.
 
 ``` text
                              <-------150ms------->
@@ -52,11 +59,11 @@ keyboard:       LS↓         LS↑             LS↓               LS↑
 computer sees:  LS↓         LS↑ DE↓ DE↑     DE↓ ..(repeats).. DE↑
 ```
 
-You can continue double tapping so long as it is within the DOUBLE\_TAP\_MILLIS window.
+You can continue double tapping so long as it is within the `DOUBLE_TAP_MILLIS` window.
 
 ### Consumption
 
-Press or release another key during the TAP\_MILLIS window and the tap will not occur.
+Press or release another key during the `TAP_MILLIS` window and the tap will not occur.
 
 This is especially useful for modifiers, for instance a quick ctrl-C. In this example we press the a key during the window.
 
@@ -100,7 +107,7 @@ See [examples](https://gitlab.com/interception/linux/plugins/dual-function-keys/
 
 ### dual-function-keys
 
-This yaml file can go anywhere.
+This yaml file conventionally resides in `/etc/interception/dual-function-keys`.
 
 You can use raw (integer) keycodes, however it is easier to use the `#define`d strings from [input-event-codes.h](https://github.com/torvalds/linux/blob/master/include/uapi/linux/input-event-codes.h).
 
@@ -267,7 +274,7 @@ Example udevmon configuration for a mouse and keyboard:
 ```yaml
 - CMD: mux -c dfk -c my-keyboard -c my-mouse
 - JOB:
-    - mux -i dfk | dual-function-keys -c /etc/interception/udevmon.d/dual-function-keys/my-cfg.yaml | mux -o my-keyboard -o my-mouse
+    - mux -i dfk | dual-function-keys -c /etc/interception/dual-function-keys/my-cfg.yaml | mux -o my-keyboard -o my-mouse
     - mux -i my-keyboard | uinput -c /etc/interception/udevmon.d/my-keyboard.yaml
     - mux -i my-mouse | uinput -c /etc/interception/udevmon.d/my-mouse.yaml
 - JOB: intercept -g $DEVNODE | mux -o dfk

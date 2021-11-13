@@ -16,14 +16,16 @@ A hand-saver for those with restricted finger mobility.
 A plugin for interception tools (https://gitlab.com/interception/linux).
 .SH QUICK START
 .IP "1." 3
-Define some mappings \f[C]/etc/interception/dual-function-keys/my-mappings.yaml\f[R].
+Create some mappings \f[C]/etc/interception/dual-function-keys/my-mappings.yaml\f[R].
 There are many examples (https://gitlab.com/interception/linux/plugins/dual-function-keys/-/tree/master/doc/examples.md)
 .IP "2." 3
 Create your interception tools (https://gitlab.com/interception/linux) udevmon configuration: \f[C]/etc/interception/udevmon.d/my-keyboards.yaml\f[R].
 You can use my configuration to get started.
 .IP "3." 3
-Restart udevmon: \f[C]sudo systemctl restart udevmon\f[R]
+Enable udevmon: \f[C]sudo systemctl enable udevmon\f[R]
 .IP "4." 3
+(Re)start udevmon: \f[C]sudo systemctl restart udevmon\f[R]
+.IP "5." 3
 Check for problems: \f[C]journalctl -u udevmon\f[R].
 No news is good news.
 You can safely disregard any \f[C]ignoring /etc/interception/udevmon.yaml, reason: bad file: /etc/interception/udevmon.yaml\f[R] messages.
@@ -32,9 +34,17 @@ You can safely disregard any \f[C]ignoring /etc/interception/udevmon.yaml, reaso
 In these examples we will use the left shift key (LS).
 .PP
 It is configured to tap for delete (DE) and hold for LS.
+.IP
+.nf
+\f[C]
+  - KEY: KEY_LEFTSHIFT
+    TAP: KEY_DELETE
+    HOLD: KEY_LEFTSHIFT
+\f[R]
+.fi
 .SS Tap
 .PP
-Press and release LS within TAP_MILLIS (default 200ms) for DE.
+Press and release LS within \f[C]TAP_MILLIS\f[R] (default 200ms) for DE.
 .PP
 By default, until the tap is complete, we get LS.
 See below for other options.
@@ -48,7 +58,7 @@ computer sees:  LS\[da]      LS\[ua] DE\[da] DE\[ua]          LS\[da]           
 .fi
 .SS Double Tap
 .PP
-Tap then press again with DOUBLE_TAP_MILLIS (default 150ms) to hold DE.
+Tap then press again with \f[C]DOUBLE_TAP_MILLIS\f[R] (default 150ms) to hold DE.
 .IP
 .nf
 \f[C]
@@ -59,10 +69,10 @@ computer sees:  LS\[da]         LS\[ua] DE\[da] DE\[ua]     DE\[da] ..(repeats).
 \f[R]
 .fi
 .PP
-You can continue double tapping so long as it is within the DOUBLE_TAP_MILLIS window.
+You can continue double tapping so long as it is within the \f[C]DOUBLE_TAP_MILLIS\f[R] window.
 .SS Consumption
 .PP
-Press or release another key during the TAP_MILLIS window and the tap will not occur.
+Press or release another key during the \f[C]TAP_MILLIS\f[R] window and the tap will not occur.
 .PP
 This is especially useful for modifiers, for instance a quick ctrl-C.
 In this example we press the a key during the window.
@@ -108,7 +118,7 @@ There are two parts to be configured: dual-function-keys and udevmon, which laun
 See examples (https://gitlab.com/interception/linux/plugins/dual-function-keys/-/tree/master/doc/examples.md) which contains dual-function-keys and udevmon.yaml configurations.
 .SS dual-function-keys
 .PP
-This yaml file can go anywhere.
+This yaml file conventionally resides in \f[C]/etc/interception/dual-function-keys\f[R].
 .PP
 You can use raw (integer) keycodes, however it is easier to use the \f[C]#define\f[R]d strings from input-event-codes.h (https://github.com/torvalds/linux/blob/master/include/uapi/linux/input-event-codes.h).
 .IP
@@ -307,7 +317,7 @@ Example udevmon configuration for a mouse and keyboard:
 \f[C]
 - CMD: mux -c dfk -c my-keyboard -c my-mouse
 - JOB:
-    - mux -i dfk | dual-function-keys -c /etc/interception/udevmon.d/dual-function-keys/my-cfg.yaml | mux -o my-keyboard -o my-mouse
+    - mux -i dfk | dual-function-keys -c /etc/interception/dual-function-keys/my-cfg.yaml | mux -o my-keyboard -o my-mouse
     - mux -i my-keyboard | uinput -c /etc/interception/udevmon.d/my-keyboard.yaml
     - mux -i my-mouse | uinput -c /etc/interception/udevmon.d/my-mouse.yaml
 - JOB: intercept -g $DEVNODE | mux -o dfk
