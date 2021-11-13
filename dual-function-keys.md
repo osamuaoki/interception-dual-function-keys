@@ -55,6 +55,7 @@ This is especially useful for modifiers, for instance a quick ctrl-C. In this ex
 
 Double taps do not apply after consumption; you will need to tap first.
 
+Mouse and touchpad events (`EV_REL` and `EV_ABS`) can also consume taps, however you will need to use a [Multiple Devices](#multiple-devices) configuration.
 ``` text
                                                                <-------150ms------->
                                                  <---------200ms--------->
@@ -63,8 +64,6 @@ Double taps do not apply after consumption; you will need to tap first.
 keyboard:       LS↓      a↓  a↑  LS↑             LS↓          LS↑           LS↓
 computer sees:  LS↓      a↓  a↑  LS↑             LS↓          LS↑ DE↓ DE↑   DE↓ ..(repeats)..
 ```
-
-Note: mouse and touchpad events (`EV_REL` and `EV_ABS`) can also consume taps.
 
 ## INSTALLATION
 
@@ -145,7 +144,7 @@ You can configure the `HOLD` as a “combo”, which will press then release mul
 MAPPINGS:
     - KEY: KEY_TAB
       TAP: KEY_TAB
-      HOLD: [ KEY_LEFTCTRL, KEY_LEFTMETA, KEY_LEFTALT, ] 
+      HOLD: [ KEY_LEFTCTRL, KEY_LEFTMETA, KEY_LEFTALT, ]
 ```
 
 By default, there will be a pause of 20ms between keys in the "combo". This may be changed:
@@ -238,17 +237,63 @@ See [Interception Tools: How It Works](https://gitlab.com/interception/linux/too
 
 Usually the name is sufficient to uniquely identify the keyboard, however some keyboards register many devices such as a virtal mouse. You can run dual-function-keys for all the devices, however I prefer to run it only for the actual keyboard.
 
-My `/etc/interception/udevmon.yml`:
+My `/etc/interception/udevmon.d/my-keyboards.yaml`:
 
 ``` yaml
 - JOB: "intercept -g $DEVNODE | dual-function-keys -c /etc/interception/dual-function-keys/home-row-modifiers.yaml | uinput -d $DEVNODE"
   DEVICE:
-    NAME: "q.m.k HHKB mod Keyboard"
-- JOB: "intercept -g $DEVNODE | dual-function-keys -c /etc/interception/dual-function-keys/thumb-cluster.yaml | uinput -d $DEVNODE"
-  DEVICE:
-    NAME: "Kinesis Advantage2 Keyboard"
+    NAME: "Minimalist Keyboard ABC"
     EVENTS:
       EV_KEY: [ KEY_LEFTSHIFT ]
+- JOB: "intercept -g $DEVNODE | dual-function-keys -c /etc/interception/dual-function-keys/thumb-cluster.yaml | uinput -d $DEVNODE"
+  DEVICE:
+    NAME: "Split Keyboard XYZ"
+    EVENTS:
+      EV_KEY: [ KEY_LEFTSHIFT ]
+```
+
+### Multiple Devices
+
+When using inputs from multiple devices e.g. ctrl-scroll it may be necessary to [mux](https://gitlab.com/interception/linux/tools#mux) those devices for dual-function-keys to work across these devices e.g. scroll consuming ctrl.
+
+Example udevmon configuration for a mouse and keyboard:
+```yaml
+- CMD: mux -c dfk -c my-keyboard -c my-mouse
+- JOB:
+    - mux -i dfk | dual-function-keys -c /etc/interception/udevmon.d/dual-function-keys/my-cfg.yaml | mux -o my-keyboard -o my-mouse
+    - mux -i my-keyboard | uinput -c /etc/interception/udevmon.d/my-keyboard.yaml
+    - mux -i my-mouse | uinput -c /etc/interception/udevmon.d/my-mouse.yaml
+- JOB: intercept -g $DEVNODE | mux -o dfk
+  DEVICE:
+    NAME: AT Translated Set 2 keyboard
+    EVENTS:
+      EV_KEY: [ KEY_LEFTCTRL ]
+- JOB: intercept -g $DEVNODE | mux -o dfk
+  DEVICE:
+    NAME: Razer Razer Naga Trinity
+    EVENTS:
+      EV_REL: [REL_WHEEL]
+      EV_KEY: [BTN_LEFT]
+```
+
+In the above example, `my-keyboard.yaml` and `my-mouse.yaml` represent the virtual devices that udevmon will create to output events. They are generated once from the device itself e.g.
+```
+sudo uinput -p -d /dev/input/by-id/usb-my-keyboard-kbd > my-keyboard.yaml
+```
+
+An alternative, if you want to [live dangerously](https://gitlab.com/interception/linux/plugins/dual-function-keys/-/issues/31#note_725722450), is to generate the virtual device configuration on the fly e.g.:
+```yaml
+- CMD: mux -c dfk -c my-keyboard -c my-mouse
+- JOB:
+    - mux -i dfk | dual-function-keys -c /etc/interception/dual-function-keys/my-cfg.yaml | mux -o my-keyboard -o my-mouse
+    - mux -i my-keyboard | uinput -d /dev/input/by-path/my-keyboard-event-kbd
+    - mux -i my-mouse | uinput -d /dev/input/by-id/usb-my-mouse-event-mouse
+- JOB: intercept -g $DEVNODE | mux -o dfk
+  DEVICE:
+    LINK: /dev/input/by-path/my-keyboard-event-kbd
+- JOB: intercept -g $DEVNODE | mux -o dfk
+  DEVICE:
+    LINK: /dev/input/by-id/usb-my-mouse-event-mouse
 ```
 
 ## CAVEATS
