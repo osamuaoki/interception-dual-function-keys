@@ -14,6 +14,19 @@ Great for modifier keys like: hold for ctrl, tap for delete.
 A hand-saver for those with restricted finger mobility.
 .PP
 A plugin for interception tools (https://gitlab.com/interception/linux).
+.SH QUICK START
+.IP "1." 3
+Define some mappings \f[C]/etc/interception/dual-function-keys/my-mappings.yaml\f[R].
+There are many examples (https://gitlab.com/interception/linux/plugins/dual-function-keys/-/tree/master/doc/examples.md)
+.IP "2." 3
+Create your interception tools (https://gitlab.com/interception/linux) udevmon configuration: \f[C]/etc/interception/udevmon.d/my-keyboards.yaml\f[R].
+You can use my configuration to get started.
+.IP "3." 3
+Restart udevmon: \f[C]sudo systemctl restart udevmon\f[R]
+.IP "4." 3
+Check for problems: \f[C]journalctl -u udevmon\f[R].
+No news is good news.
+You can safely disregard any \f[C]ignoring /etc/interception/udevmon.yaml, reason: bad file: /etc/interception/udevmon.yaml\f[R] messages.
 .SH FUNCTIONALITY
 .PP
 In these examples we will use the left shift key (LS).

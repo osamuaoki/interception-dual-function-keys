@@ -1,3 +1,38 @@
+# Thumb Cluster
+
+```yaml
+TIMING:
+  TAP_MILLISEC: 200
+  DOUBLE_TAP_MILLISEC: 150
+
+MAPPINGS:
+  # left cluster
+  - KEY: KEY_BACKSPACE
+    TAP: KEY_BACKSPACE
+    HOLD: KEY_LEFTSHIFT
+
+  - KEY: KEY_ESC
+    TAP: KEY_ESC
+    HOLD: KEY_LEFTCTRL
+
+  - KEY: KEY_TAB
+    TAP: KEY_TAB
+    HOLD: KEY_LEFTALT
+
+  # right cluster
+  - KEY: KEY_SPACE
+    TAP: KEY_SPACE
+    HOLD: KEY_RIGHTSHIFT
+
+  - KEY: KEY_ENTER
+    TAP: KEY_ENTER
+    HOLD: KEY_RIGHTCTRL
+
+  - KEY: KEY_DELETE
+    TAP: KEY_DELETE
+    HOLD: KEY_RIGHTALT
+```
+
 # Home Row Modifiers
 
 ```yaml

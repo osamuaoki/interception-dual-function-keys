@@ -12,6 +12,13 @@ A hand-saver for those with restricted finger mobility.
 
 A plugin for [interception tools](https://gitlab.com/interception/linux).
 
+## QUICK START
+
+1.  Define some mappings `/etc/interception/dual-function-keys/my-mappings.yaml`. There are many [examples](https://gitlab.com/interception/linux/plugins/dual-function-keys/-/tree/master/doc/examples.md)
+2.  Create your [interception tools](https://gitlab.com/interception/linux) udevmon configuration: `/etc/interception/udevmon.d/my-keyboards.yaml`. You can use [my configuration](#udevmon) to get started.
+3.  Restart udevmon: `sudo systemctl restart udevmon`
+4.  Check for problems: `journalctl -u udevmon`. No news is good news. You can safely disregard any `ignoring /etc/interception/udevmon.yaml, reason: bad file: /etc/interception/udevmon.yaml` messages.
+
 ## FUNCTIONALITY
 
 In these examples we will use the left shift key (LS).
