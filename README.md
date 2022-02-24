@@ -78,9 +78,9 @@ computer sees:  LS↓      a↓  a↑  LS↑             LS↓          LS↑ DE
 
 ## INSTALLATION
 
-### Arch Linux
+### Package Manager
 
-Arch Linux users may install from the Arch community package repository: [interception-dual-function-keys](https://archlinux.org/packages/community/x86_64/interception-dual-function-keys/).
+[![Packaging status](https://repology.org/badge/vertical-allrepos/interception-dual-function-keys.svg)](https://repology.org/project/interception-dual-function-keys/versions)
 
 ### From Source
 
