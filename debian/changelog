@@ -1,0 +1,5 @@
+interception-dual-function-keys (1.4.0-1) unstable; urgency=medium
+
+  * initial Debian package
+
+ -- Osamu Aoki <osamu@debian.org>  Fri, 27 May 2022 18:50:46 +0900

@@ -1,0 +1,10 @@
+#!/bin/sh
+set -e
+
+#DEBHELPER#
+
+# restart udevmon service 
+if [ -d /run/systemd/system ]; then
+  deb-systemd-helper restart udevmon.service >/dev/null 
+fi
+

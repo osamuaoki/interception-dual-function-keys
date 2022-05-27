@@ -1,0 +1,3 @@
+version=4
+
+https://gitlab.com/interception/linux/plugins/dual-function-keys/tags?sort=updated_desc archive/@ANY_VERSION@/dual-function-keys-\d\S*@ARCHIVE_EXT@
